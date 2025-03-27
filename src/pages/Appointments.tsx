@@ -1253,34 +1253,34 @@ const Appointments = () => {
 
                         <div className="space-y-3">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Reference:</span>
+                            <span className="text-gray-600">Reference :</span>
                             <span className="font-medium">APT-{Math.floor(100000 + Math.random() * 900000)}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Patient:</span>
+                            <span className="text-gray-600">Patient :</span>
                             <span className="font-medium">{appointmentDetails.name}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Email:</span>
+                            <span className="text-gray-600">Email :</span>
                             <span className="font-medium">{appointmentDetails.email}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Phone:</span>
+                            <span className="text-gray-600">Phone :</span>
                             <span className="font-medium">{appointmentDetails.phone}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Department:</span>
+                            <span className="text-gray-600">Department :</span>
                             <span className="font-medium capitalize">{appointmentDetails.department}</span>
                           </div>
 
                           {/* Display selected doctor in confirmation */}
                           {appointmentDetails.doctor && (
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Doctor:</span>
+                              <span className="text-gray-600">Doctor :</span>
                               <span className="font-medium">
                                 {doctorsByDepartment[appointmentDetails.department]?.find(
                                   (d) => d.id === appointmentDetails.doctor,
@@ -1290,19 +1290,19 @@ const Appointments = () => {
                           )}
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Date:</span>
+                            <span className="text-gray-600">Appointment Date :</span>
                             <span className="font-medium">{format(appointmentDetails.date, "MMMM d, yyyy")}</span>
                           </div>
 
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Time:</span>
+                            <span className="text-gray-600">Appointment Time :</span>
                             <span className="font-medium">{getTimeDisplay(appointmentDetails.timePreference)}</span>
                           </div>
 
                           {/* Corporate details if applicable */}
                           {appointmentDetails.isCompany && appointmentDetails.companyName && (
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Company:</span>
+                              <span className="text-gray-600">Company :</span>
                               <span className="font-medium">{appointmentDetails.companyName}</span>
                             </div>
                           )}
@@ -1310,7 +1310,7 @@ const Appointments = () => {
                           {/* Group booking details if applicable */}
                           {appointmentDetails.groupBooking && appointmentDetails.numberOfAttendees && (
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Group Size:</span>
+                              <span className="text-gray-600">Group Size :</span>
                               <span className="font-medium">{appointmentDetails.numberOfAttendees} people</span>
                             </div>
                           )}
@@ -1319,7 +1319,7 @@ const Appointments = () => {
                             <h4 className="font-medium text-gray-900 mb-2">Payment Information</h4>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Amount:</span>
+                              <span className="text-gray-600">Invoiced Amount:</span>
                               <span className="font-medium text-hospital-700">
                                 KES {calculateAppointmentCost().toFixed(2)}
                               </span>

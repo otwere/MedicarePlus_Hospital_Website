@@ -28,10 +28,61 @@ interface PrintReceiptButtonProps {
 const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) => {
   const formatCurrency = (value: number | undefined): string => {
     if (value === undefined) return "0.00"
-    return value.toLocaleString('en-US', {
+    return value.toLocaleString("en-US", {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     })
+  }
+
+  const maskPolicyNumber = (policyNumber: string | undefined): string => {
+    if (!policyNumber || policyNumber.length < 5) return policyNumber || ""
+
+    const length = policyNumber.length
+    const startChars = Math.floor((length - 3) / 2)
+    const endChars = length - startChars - 3
+
+    return policyNumber.substring(0, startChars) + "***" + policyNumber.substring(startChars + 3)
+  }
+
+  const maskEmail = (email: string | undefined): string => {
+    if (!email || !email.includes("@")) return email || ""
+
+    const [username, domain] = email.split("@")
+
+    if (username.length <= 3) {
+      return `${username}@${domain}`
+    }
+
+    const visibleChars = Math.min(3, Math.floor(username.length / 3))
+    const maskedLength = username.length - visibleChars * 2
+
+    const firstPart = username.substring(0, visibleChars)
+    const lastPart = username.substring(username.length - visibleChars)
+    const maskedPart = "*".repeat(Math.max(3, maskedLength))
+
+    return `${firstPart}${maskedPart}${lastPart}@${domain}`
+  }
+
+  const maskPhoneNumber = (phone: string | undefined): string => {
+    if (!phone || phone.length < 6) return phone || ""
+
+    // Remove any non-digit characters for consistent formatting
+    const digitsOnly = phone.replace(/\D/g, "")
+
+    if (digitsOnly.length < 6) return phone
+
+    const firstPart = phone.substring(0, Math.min(4, Math.floor(phone.length / 3)))
+    const lastPart = phone.substring(phone.length - 4)
+
+    // Find the middle part to replace with asterisks
+    const middleStartIndex = firstPart.length
+    const middleEndIndex = phone.length - lastPart.length
+    const middleLength = middleEndIndex - middleStartIndex
+
+    // Create the masked middle part with the same length as the original
+    const maskedMiddle = "*".repeat(Math.min(3, middleLength))
+
+    return `${firstPart}${maskedMiddle}${lastPart}`
   }
 
   const handlePrintReceipt = () => {
@@ -392,7 +443,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                         ? `
                     <div class="receipt-row">
                       <div class="receipt-label">Email :</div>
-                      <div class="receipt-value">${paymentData.email}</div>
+                      <div class="receipt-value">${maskEmail(paymentData.email)}</div>
                     </div>
                     `
                         : ""
@@ -402,7 +453,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                         ? `
                     <div class="receipt-row">
                       <div class="receipt-label">Phone :</div>
-                      <div class="receipt-value">${paymentData.phone}</div>
+                      <div class="receipt-value">${maskPhoneNumber(paymentData.phone)}</div>
                     </div>
                     `
                         : ""
@@ -472,15 +523,15 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                   <div class="receipt-section">
                     <div class="section-title">Insurance Information</div>
                     <div class="receipt-row">
-                      <div class="receipt-label">Provider:</div>
+                      <div class="receipt-label">Insurance Provider :</div>
                       <div class="receipt-value">${paymentData.insuranceProvider}</div>
                     </div>
                     ${
                       paymentData.insurancePolicyNumber
                         ? `
                     <div class="receipt-row">
-                      <div class="receipt-label">Policy Number:</div>
-                      <div class="receipt-value">${paymentData.insurancePolicyNumber}</div>
+                      <div class="receipt-label"> Policy Number :</div>
+                      <div class="receipt-value">${maskPolicyNumber(paymentData.insurancePolicyNumber)}</div>
                     </div>
                     `
                         : ""
@@ -527,7 +578,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                       <div class="receipt-value amount">KES ${formatCurrency(totalWithVat)}</div>
                     </div>
                     <div class="receipt-row">
-                      <div class="receipt-label">Status :</div>
+                      <div class="receipt-label">Invoice Status :</div>
                       <div class="receipt-value"><span class="payment-status">${paymentStatus}</span></div>
                     </div>
                   </div>
@@ -601,3 +652,4 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
 }
 
 export default PrintReceiptButton
+
