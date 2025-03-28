@@ -176,9 +176,8 @@ const insuranceProviders = [
   { id: "Kenindia Assurance", name: "Kenindia Assurance" },
   { id: "GA Insurance Kenya", name: "GA Insurance Kenya" },
   { id: "First Assurance", name: "First Assurance" },
-  { id: "Liberty Life Kenya", name: "Liberty Life Kenya" }
-];
-
+  { id: "Liberty Life Kenya", name: "Liberty Life Kenya" },
+]
 
 // Corporate partners
 
@@ -261,7 +260,6 @@ const Appointments = () => {
     toast.success("Corporate account registered successfully!")
   }
 
-
   /**
    * Gets available time slots for the selected date
    * @param date The selected appointment date
@@ -322,7 +320,24 @@ const Appointments = () => {
       })
     }
 
-    return [...morningSlots, ...afternoonSlots, ...eveningSlots]
+    // Check if all slots in a time period have passed
+    const allMorningSlotsPassed = isToday && currentHour >= 12 // All morning slots have passed after 12 PM
+    const allAfternoonSlotsPassed = isToday && currentHour >= 17 // All afternoon slots have passed after 5 PM
+    const allEveningSlotsPassed = isToday && currentHour >= 19 // All evening slots have passed after 7 PM
+
+    // Add general time period options
+    const generalTimeSlots = [
+      { value: "morning", label: "Morning (9:00 AM - 12:00 PM)", group: "general", disabled: allMorningSlotsPassed },
+      {
+        value: "afternoon",
+        label: "Afternoon (1:00 PM - 4:00 PM)",
+        group: "general",
+        disabled: allAfternoonSlotsPassed,
+      },
+      { value: "evening", label: "Evening (5:00 PM - 7:00 PM)", group: "general", disabled: allEveningSlotsPassed },
+    ]
+
+    return [...generalTimeSlots, ...morningSlots, ...afternoonSlots, ...eveningSlots]
   }
 
   // Handle form submission
@@ -972,12 +987,31 @@ const Appointments = () => {
                                       </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                      <SelectItem
-                                        value="morning"
-                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2"
-                                      >
-                                        Morning
-                                      </SelectItem>
+                                      {getAvailableTimeSlots(form.watch("date"))
+                                        .filter((slot) => slot.group === "general")
+                                        .map((slot) => (
+                                          <SelectItem
+                                            key={slot.value}
+                                            value={slot.value}
+                                            disabled={slot.disabled}
+                                            className="font-semibold text-hospital-700 bg-hospital-50 py-2"
+                                          >
+                                            <div className="flex items-center gap-2">
+                                              <span>{slot.label}</span>
+                                              {slot.disabled && (
+                                                <span className="text-xs text-red-500 ml-1">
+                                                  (Time period has passed)
+                                                </span>
+                                              )}
+                                            </div>
+                                          </SelectItem>
+                                        ))}
+
+                                      <div className="pt-2 pb-1 px-2 text-xs font-medium text-gray-500">
+                                        Specific Time Slots
+                                      </div>
+
+                                      <div className="pt-1 pb-1 px-2 text-xs font-medium text-gray-500">Morning</div>
                                       {getAvailableTimeSlots(form.watch("date"))
                                         .filter((slot) => slot.group === "morning")
                                         .map((slot) => (
@@ -985,24 +1019,21 @@ const Appointments = () => {
                                             key={slot.value}
                                             value={slot.value}
                                             disabled={slot.disabled}
-                                            className="pl-6"
+                                            className={`pl-6 ${slot.disabled ? "text-red-400" : ""}`}
                                           >
                                             <div className="flex items-center gap-2">
-                                              <Clock className="h-3.5 w-3.5 text-hospital-500" />
+                                              <Clock
+                                                className={`h-3.5 w-3.5 ${slot.disabled ? "text-red-400" : "text-hospital-500"}`}
+                                              />
                                               <span>{slot.label}</span>
                                               {slot.disabled && (
-                                                <span className="text-xs text-red-500 ml-1">(Unavailable)</span>
+                                                <span className="text-xs text-red-500 ml-1">(Time has passed)</span>
                                               )}
                                             </div>
                                           </SelectItem>
                                         ))}
 
-                                      <SelectItem
-                                        value="afternoon"
-                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1"
-                                      >
-                                        Afternoon
-                                      </SelectItem>
+                                      <div className="pt-1 pb-1 px-2 text-xs font-medium text-gray-500">Afternoon</div>
                                       {getAvailableTimeSlots(form.watch("date"))
                                         .filter((slot) => slot.group === "afternoon")
                                         .map((slot) => (
@@ -1010,24 +1041,21 @@ const Appointments = () => {
                                             key={slot.value}
                                             value={slot.value}
                                             disabled={slot.disabled}
-                                            className="pl-6"
+                                            className={`pl-6 ${slot.disabled ? "text-red-400" : ""}`}
                                           >
                                             <div className="flex items-center gap-2">
-                                              <Clock className="h-3.5 w-3.5 text-hospital-500" />
+                                              <Clock
+                                                className={`h-3.5 w-3.5 ${slot.disabled ? "text-red-400" : "text-hospital-500"}`}
+                                              />
                                               <span>{slot.label}</span>
                                               {slot.disabled && (
-                                                <span className="text-xs text-red-500 ml-1">(Unavailable)</span>
+                                                <span className="text-xs text-red-500 ml-1">(Time has passed)</span>
                                               )}
                                             </div>
                                           </SelectItem>
                                         ))}
 
-                                      <SelectItem
-                                        value="evening"
-                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1"
-                                      >
-                                        Evening
-                                      </SelectItem>
+                                      <div className="pt-1 pb-1 px-2 text-xs font-medium text-gray-500">Evening</div>
                                       {getAvailableTimeSlots(form.watch("date"))
                                         .filter((slot) => slot.group === "evening")
                                         .map((slot) => (
@@ -1035,13 +1063,15 @@ const Appointments = () => {
                                             key={slot.value}
                                             value={slot.value}
                                             disabled={slot.disabled}
-                                            className="pl-6"
+                                            className={`pl-6 ${slot.disabled ? "text-red-400" : ""}`}
                                           >
                                             <div className="flex items-center gap-2">
-                                              <Clock className="h-3.5 w-3.5 text-hospital-500" />
+                                              <Clock
+                                                className={`h-3.5 w-3.5 ${slot.disabled ? "text-red-400" : "text-hospital-500"}`}
+                                              />
                                               <span>{slot.label}</span>
                                               {slot.disabled && (
-                                                <span className="text-xs text-red-500 ml-1">(Unavailable)</span>
+                                                <span className="text-xs text-red-500 ml-1">(Time has passed)</span>
                                               )}
                                             </div>
                                           </SelectItem>
@@ -1157,28 +1187,28 @@ const Appointments = () => {
                           <div className="flex items-start gap-2">
                             <User className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Patient Name:</p>
+                              <p className="text-gray-500">Patient Name :</p>
                               <p className="font-medium">{appointmentDetails.name}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Calendar className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Date:</p>
+                              <p className="text-gray-500">Appointment Date :</p>
                               <p className="font-medium">{format(appointmentDetails.date, "MMMM d, yyyy")}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Clock className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Time:</p>
+                              <p className="text-gray-500">Appointment Time :</p>
                               <p className="font-medium">{getTimeDisplay(appointmentDetails.timePreference)}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Mail className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Department:</p>
+                              <p className="text-gray-500">Department :</p>
                               <p className="font-medium capitalize">{appointmentDetails.department}</p>
                             </div>
                           </div>
@@ -1188,7 +1218,7 @@ const Appointments = () => {
                             <div className="flex items-start gap-2 col-span-2">
                               <User className="h-4 w-4 text-gray-500 mt-0.5" />
                               <div>
-                                <p className="text-gray-500">Doctor:</p>
+                                <p className="text-gray-500">Specialist Doctor :</p>
                                 <p className="font-medium">
                                   {doctorsByDepartment[appointmentDetails.department]?.find(
                                     (d) => d.id === appointmentDetails.doctor,
@@ -1295,7 +1325,7 @@ const Appointments = () => {
                           </div>
 
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Appointment Time :</span>
+                            <span className="text-gray-600">Appointment Time:</span>
                             <span className="font-medium">{getTimeDisplay(appointmentDetails.timePreference)}</span>
                           </div>
 
@@ -1319,14 +1349,14 @@ const Appointments = () => {
                             <h4 className="font-medium text-gray-900 mb-2">Payment Information</h4>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Invoiced Amount:</span>
+                              <span className="text-gray-600">Amount :</span>
                               <span className="font-medium text-hospital-700">
                                 KES {calculateAppointmentCost().toFixed(2)}
                               </span>
                             </div>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Payment Method:</span>
+                              <span className="text-gray-600">Payment Method :</span>
                               <span className="font-medium">
                                 {paymentMethod === "mobile_money"
                                   ? "Mobile Money"
@@ -1341,19 +1371,19 @@ const Appointments = () => {
                             </div>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Transaction ID:</span>
+                              <span className="text-gray-600">Transaction ID :</span>
                               <span className="font-medium font-mono text-sm bg-gray-100 px-2 py-1 rounded">
                                 {transactionId}
                               </span>
                             </div>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Payment Date:</span>
+                              <span className="text-gray-600">Payment Date :</span>
                               <span className="font-medium">{format(new Date(paymentDate), "MMMM d, yyyy")}</span>
                             </div>
 
                             <div className="flex justify-between mt-2">
-                              <span className="text-gray-600">Status:</span>
+                              <span className="text-gray-600">Invoice Status :</span>
                               <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Paid</Badge>
                             </div>
                           </div>
