@@ -437,7 +437,7 @@ const Doctors = () => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="flex-1 border-hospital-200 text-hospital-700 hover:bg-blue-300"
+                    className="flex-1 border-hospital-200 text-hospital-700 hover:bg-orange-400"
                     onClick={() => setSelectedDoctor(doctor)}
                   >
                     View Profile

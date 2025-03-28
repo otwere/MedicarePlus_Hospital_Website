@@ -317,7 +317,7 @@ const Index = () => {
                     <p className="text-gray-600">{department.description}</p>
                   </CardContent>
                   <CardFooter>
-                    <Button asChild variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-blue-300">
+                    <Button asChild variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-orange-400">
                       <Link to={`/departments/${department.id}`}>
                         Learn More <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -367,7 +367,7 @@ const Index = () => {
                     <CardDescription>{doctor.specialty}</CardDescription>
                   </CardHeader>
                   <CardFooter>
-                    <Button asChild variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-blue-300">
+                    <Button asChild variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-orange-400">
                       <Link to="/doctors">
                         View Profile
                       </Link>
@@ -712,7 +712,7 @@ const Index = () => {
                     <p className="text-gray-600">{service.description}</p>
                   </CardContent>
                   <CardFooter>
-                    <Button asChild variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-blue-300">
+                    <Button asChild variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-orange-400">
                       <Link to="/ambulatory-services">
                         Learn More <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>

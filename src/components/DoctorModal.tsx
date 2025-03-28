@@ -232,7 +232,7 @@ const DoctorModal = ({ isOpen, onClose, doctor }: DoctorModalProps) => {
                       <Button asChild className="bg-hospital-600 hover:bg-hospital-700">
                         <a href="/appointments">Online Booking</a>
                       </Button>
-                      <Button variant="outline" className="border-hospital-500 text-hospital-700 hover:bg-blue-300">
+                      <Button variant="outline" className="border-hospital-500 text-hospital-700 hover:bg-orange-400">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"

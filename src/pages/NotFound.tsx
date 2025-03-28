@@ -39,7 +39,7 @@ const NotFound = () => {
             <Button asChild className="bg-hospital-600 hover:bg-hospital-700">
               <Link to="/">Back to Home</Link>
             </Button>
-            <Button asChild variant="outline" className="border-hospital-300 text-hospital-700 hover:bg-blue-300">
+            <Button asChild variant="outline" className="border-hospital-300 text-hospital-700 hover:bg-orange-400">
               <Link to="/contact">Contact Support</Link>
             </Button>
           </div>

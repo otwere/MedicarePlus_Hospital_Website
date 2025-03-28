@@ -117,7 +117,7 @@ const Navbar = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to={dept.path}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blue-300 hover:text-hospital-600"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-orange-400 hover:text-hospital-600"
                           >
                             <div className="text-sm font-medium leading-none">{dept.name}</div>
                             <p className="line-clamp-2 text-sm leading-snug text-gray-500">
@@ -147,7 +147,7 @@ const Navbar = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to={link.path}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blue-300 hover:text-hospital-600"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-orange-400 hover:text-hospital-600"
                           >
                             <div className="text-sm font-medium leading-none">{link.name}</div>
                           </Link>
@@ -174,7 +174,7 @@ const Navbar = () => {
                         <NavigationMenuLink asChild>
                           <Link
                             to={link.path}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blue-300 hover:text-hospital-600"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-orange-400 hover:text-hospital-600"
                           >
                             <div className="text-sm font-medium leading-none">{link.name}</div>
                           </Link>
@@ -202,7 +202,7 @@ const Navbar = () => {
           </NavigationMenu>
 
           <div className="flex items-center gap-4">
-            <Button variant="outline" className="border-hospital-500 text-hospital-700 hover:bg-blue-300 transition-all group">
+            <Button variant="outline" className="border-hospital-500 text-hospital-700 hover:bg-orange-400 transition-all group">
               <Phone size={16} className="mr-2 text-hospital-600 group-hover:rotate-12 transition-transform" />
               <span className="font-medium">Emergency : 911</span>
             </Button>

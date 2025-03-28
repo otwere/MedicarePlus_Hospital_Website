@@ -109,40 +109,40 @@ const doctorsByDepartment: Record<
   cardiology: [
     { id: "c1", name: "Dr. Michael Smith", title: "Cardiologist", availability: "High", priority: true },
     { id: "c2", name: "Dr. Emily Johnson", title: "Interventional Cardiologist", availability: "Medium" },
-    { id: "c3", name: "Dr. David Wilson", title: "Heart Rhythm Specialist", availability: "Low" },
+    { id: "c3", name: "Dr. David Wilson", title: "Heart Rhythm Specialist", availability: "Doctor on Call - " },
   ],
   neurology: [
     { id: "n1", name: "Dr. Sarah Thompson", title: "Neurologist", availability: "Medium", priority: true },
-    { id: "n2", name: "Dr. Robert Lee", title: "Neurosurgeon", availability: "Low" },
+    { id: "n2", name: "Dr. Robert Lee", title: "Neurosurgeon", availability: "Doctor on Call - " },
     { id: "n3", name: "Dr. Jessica Brown", title: "Stroke Specialist", availability: "High" },
   ],
   orthopedics: [
     { id: "o1", name: "Dr. James Anderson", title: "Orthopedic Surgeon", availability: "High", priority: true },
     { id: "o2", name: "Dr. Patricia Martinez", title: "Sports Medicine Specialist", availability: "Medium" },
-    { id: "o3", name: "Dr. Richard Taylor", title: "Joint Replacement Surgeon", availability: "Low" },
+    { id: "o3", name: "Dr. Richard Taylor", title: "Joint Replacement Surgeon", availability: "Doctor on Call - " },
   ],
   pediatrics: [
     { id: "p1", name: "Dr. Jennifer White", title: "Pediatrician", availability: "High" },
-    { id: "p2", name: "Dr. Thomas Garcia", title: "Pediatric Neurologist", availability: "Low", priority: true },
+    { id: "p2", name: "Dr. Thomas Garcia", title: "Pediatric Neurologist", availability: "Doctor on Call - ", priority: true },
     { id: "p3", name: "Dr. Lisa Rodriguez", title: "Pediatric Endocrinologist", availability: "Medium" },
   ],
   dermatology: [
     { id: "d1", name: "Dr. Mark Davis", title: "Dermatologist", availability: "High", priority: true },
     { id: "d2", name: "Dr. Linda Wilson", title: "Cosmetic Dermatologist", availability: "Medium" },
-    { id: "d3", name: "Dr. Daniel Harris", title: "Pediatric Dermatologist", availability: "Low" },
+    { id: "d3", name: "Dr. Daniel Harris", title: "Pediatric Dermatologist", availability: "Doctor on Call - " },
   ],
   ophthalmology: [
     { id: "op1", name: "Dr. Susan Martin", title: "Ophthalmologist", availability: "Medium" },
-    { id: "op2", name: "Dr. John Clark", title: "Retina Specialist", availability: "Low", priority: true },
+    { id: "op2", name: "Dr. John Clark", title: "Retina Specialist", availability: "Doctor on Call - ", priority: true },
     { id: "op3", name: "Dr. Karen Wright", title: "Pediatric Ophthalmologist", availability: "High" },
   ],
   dentistry: [
     { id: "de1", name: "Dr. Charles Lewis", title: "Dentist", availability: "High" },
     { id: "de2", name: "Dr. Nancy Walker", title: "Orthodontist", availability: "Medium", priority: true },
-    { id: "de3", name: "Dr. George Green", title: "Periodontist", availability: "Low" },
+    { id: "de3", name: "Dr. George Green", title: "Periodontist", availability: "Doctor on Call - " },
   ],
   psychiatry: [
-    { id: "ps1", name: "Dr. Elizabeth Adams", title: "Psychiatrist", availability: "Low", priority: true },
+    { id: "ps1", name: "Dr. Elizabeth Adams", title: "Psychiatrist", availability: "Doctor on Call - ", priority: true },
     { id: "ps2", name: "Dr. William Hall", title: "Child Psychiatrist", availability: "Medium" },
     { id: "ps3", name: "Dr. Margaret Young", title: "Geriatric Psychiatrist", availability: "High" },
   ],
@@ -514,7 +514,7 @@ const Appointments = () => {
                 Book an Appointment
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Schedule your visit with our medical specialists. Please fill out the form below, and our team will
+                Schedule your visit with our medical specialists. Please fill out the form beDoctor on Call - , and our team will
                 contact you to confirm your appointment.
               </p>
             </div>
@@ -776,7 +776,7 @@ const Appointments = () => {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Full Name</FormLabel>
+                                  <FormLabel>Patient Full Name</FormLabel>
                                   <FormControl>
                                     <Input placeholder="Full Names" {...field} />
                                   </FormControl>
@@ -806,7 +806,7 @@ const Appointments = () => {
                               <FormItem>
                                 <FormLabel>Phone Number</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="+254 700 520 0008" {...field} />
+                                  <Input placeholder="+254 700 520 0008 or 0700 520 008" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -910,7 +910,7 @@ const Appointments = () => {
                                               <span>{doctor.title}</span>
                                               {doctor.availability && (
                                                 <Badge
-                                                  className={`ml-2 ${
+                                                  className={`ml-4 mb-1 ${
                                                     doctor.availability === "High"
                                                       ? "bg-green-100 text-green-800 hover:bg-green-100"
                                                       : doctor.availability === "Medium"
@@ -1090,11 +1090,11 @@ const Appointments = () => {
                             name="insuranceProvider"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Insurance Provider (Optional)</FormLabel>
+                                <FormLabel>Insurance Provider (Only when using Insurance for Payment)</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl>
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Select insurance provider (if applicable)" />
+                                      <SelectValue placeholder="Select your Insurance  Provider (if applicable)" />
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
@@ -1142,22 +1142,7 @@ const Appointments = () => {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          />
-
-                          {/* Referral Code */}
-                          <FormField
-                            control={form.control}
-                            name="referralCode"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Referral Code (Optional)</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Enter referral code if you have one" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          />                        
 
                           <Button type="submit" className="w-full bg-hospital-600 hover:bg-hospital-700">
                             <ArrowRight className="mr-2 h-4 w-4" />
@@ -1520,7 +1505,7 @@ const Appointments = () => {
           <DialogHeader>
             <DialogTitle>Register Corporate Account</DialogTitle>
             <DialogDescription>
-              Complete the form below to register your company for corporate benefits.
+              Complete the form beDoctor on Call -  to register your company for corporate benefits.
             </DialogDescription>
           </DialogHeader>
           <Form {...corporateAccountForm}>

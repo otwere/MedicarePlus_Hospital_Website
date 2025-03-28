@@ -384,8 +384,8 @@ const InsuranceDetails: React.FC<InsuranceDetailsProps> = ({ amount, onPaymentCo
     setTimeout(() => {
       // Mock policy details - in a real app, this would come from an API
       const mockPolicyDetails = {
-        policyHolderName: "John Doe",
-        policyHolderPhone: "+254712345678",
+        policyHolderName: "Otwere Evans",
+        policyHolderPhone: "0733443224",
         policyHolderEmail: "john.doe@example.com",
         coverageType: "Corporate Health Plan",
         coverageLimit: "KES 2,500,000",
@@ -1019,7 +1019,7 @@ const InsuranceDetails: React.FC<InsuranceDetailsProps> = ({ amount, onPaymentCo
                                 title: "Patient Selected",
                                 description: `${dependent.name} (${dependent.relationship}) has been selected as the patient.`,
                                 variant: "default",
-                                className: "bg-green-500 text-white",
+                                className: "bg-green-400 text-white",
                               })
                               // Other fields can be set as needed
                             }

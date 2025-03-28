@@ -688,7 +688,7 @@ const DepartmentDetail = () => {
                       </div>
                     </CardContent>
                     <CardFooter>
-                      <Button variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-blue-300">
+                      <Button variant="outline" className="w-full border-hospital-200 text-hospital-700 hover:bg-orange-400">
                         <Calendar className="mr-2 h-4 w-4" />
                         Book Appointment
                       </Button>
