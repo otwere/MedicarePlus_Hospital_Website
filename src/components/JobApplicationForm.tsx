@@ -246,9 +246,9 @@ const JobApplicationForm = ({ jobId, onSubmit }: JobApplicationFormProps) => {
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City <span className="text-red-500">*</span></FormLabel>
+                  <FormLabel>County <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input placeholder="City" {...field} />
+                    <Input placeholder="County" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -260,9 +260,9 @@ const JobApplicationForm = ({ jobId, onSubmit }: JobApplicationFormProps) => {
               name="state"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>State <span className="text-red-500">*</span></FormLabel>
+                  <FormLabel>City <span className="text-red-500">*</span></FormLabel>
                   <FormControl>
-                    <Input placeholder="State" {...field} />
+                    <Input placeholder="City" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

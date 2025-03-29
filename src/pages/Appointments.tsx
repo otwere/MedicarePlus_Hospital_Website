@@ -207,6 +207,7 @@ const Appointments = () => {
   const [paymentDate, setPaymentDate] = useState<string>("")
   const [showCorporateDialog, setShowCorporateDialog] = useState(false)
   const [corporateAccount, setCorporateAccount] = useState<z.infer<typeof corporateAccountSchema> | null>(null)
+  const [isTimeSlotClosed, setIsTimeSlotClosed] = useState(false)
 
   // Initialize corporate account form
   const corporateAccountForm = useForm<z.infer<typeof corporateAccountSchema>>({
@@ -251,6 +252,7 @@ const Appointments = () => {
   const selectedDepartment = form.watch("department")
   const isCompany = form.watch("isCompany")
   const priority = form.watch("priority")
+  const selectedTimePreference = form.watch("timePreference")
 
   // Update available doctors when department changes
   useEffect(() => {
@@ -260,6 +262,14 @@ const Appointments = () => {
       form.setValue("doctor", "")
     }
   }, [selectedDepartment, form])
+
+  // Watch for time slot changes
+  useEffect(() => {
+    const selectedSlot = getAvailableTimeSlots(form.watch("date")).find(
+      (slot) => slot.value === selectedTimePreference
+    )
+    setIsTimeSlotClosed(selectedSlot?.disabled || false)
+  }, [selectedTimePreference, form.watch("date")])
 
   // Handle corporate account registration
   const handleCorporateAccountSubmit = (data: z.infer<typeof corporateAccountSchema>) => {
@@ -378,6 +388,10 @@ const Appointments = () => {
 
   // Handle form submission
   function onSubmit(values: z.infer<typeof formSchema>) {
+    if (isTimeSlotClosed) {
+      toast.error("The selected time slot is closed. Please choose another time slot.")
+      return
+    }
     setAppointmentDetails(values)
     setStep("payment")
   }
@@ -1025,6 +1039,7 @@ const Appointments = () => {
                                     <SelectContent>
                                       <SelectItem
                                         value="morning"
+                                        disabled
                                         className="font-semibold text-hospital-700 bg-hospital-50 py-2"
                                       >
                                         Morning
@@ -1050,6 +1065,7 @@ const Appointments = () => {
 
                                       <SelectItem
                                         value="afternoon"
+                                        disabled
                                         className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1"
                                       >
                                         Afternoon
@@ -1075,6 +1091,7 @@ const Appointments = () => {
 
                                       <SelectItem
                                         value="evening"
+                                        disabled
                                         className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1"
                                       >
                                         Evening
@@ -1166,7 +1183,11 @@ const Appointments = () => {
                           />
 
                          
-                          <Button type="submit" className="w-full bg-hospital-600 hover:bg-hospital-700">
+                          <Button
+                            type="submit"
+                            className="w-full bg-hospital-600 hover:bg-hospital-700"
+                            disabled={isTimeSlotClosed}
+                          >
                             <ArrowRight className="mr-2 h-4 w-4" />
                             Continue to Payment
                           </Button>
