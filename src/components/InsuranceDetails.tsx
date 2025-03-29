@@ -386,7 +386,7 @@ const InsuranceDetails: React.FC<InsuranceDetailsProps> = ({ amount, onPaymentCo
       const mockPolicyDetails = {
         policyHolderName: "Otwere Evans",
         policyHolderPhone: "0733443224",
-        policyHolderEmail: "john.doe@example.com",
+        policyHolderEmail: "youremail@example.com",
         coverageType: "Corporate Health Plan",
         coverageLimit: "KES 2,500,000",
         expiryDate: "2025-12-31",
