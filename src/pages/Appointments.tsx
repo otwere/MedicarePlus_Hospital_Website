@@ -282,7 +282,7 @@ const Appointments = () => {
     const selectedDate = new Date(date)
     selectedDate.setHours(0, 0, 0, 0)
 
-    // If selected date is in the past, no slots available
+    // Allow appointments from Monday to Sunday
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     if (selectedDate < today) {
@@ -996,10 +996,10 @@ const Appointments = () => {
                                         selected={field.value}
                                         onSelect={field.onChange}
                                         disabled={(date) => {
-                                          // Disable dates in the past and Sundays
+                                          // Disable dates in the past
                                           const today = new Date()
                                           today.setHours(0, 0, 0, 0)
-                                          return date < today || date.getDay() === 0
+                                          return date < today
                                         }}
                                         initialFocus
                                       />
@@ -1523,7 +1523,7 @@ const Appointments = () => {
 
       {/* Corporate Account Registration Dialog */}
       <Dialog open={showCorporateDialog} onOpenChange={setShowCorporateDialog}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[900px]">
           <DialogHeader>
             <DialogTitle>Register Corporate Account</DialogTitle>
             <DialogDescription>

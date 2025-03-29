@@ -367,7 +367,7 @@ const About = () => {
                 <p className="mb-6">
                   Experience exceptional healthcare services at MediCare Plus. Our expert team is ready to provide personalized care for you and your family.
                 </p>
-                <div className="flex flex-wrap gap-4">
+                {/* <div className="flex flex-wrap gap-4">
                   <Button asChild className="bg-white text-hospital-700 hover:bg-gray-100">
                     <Link to="/appointments">Book an Appointment</Link>
                   </Button>
@@ -376,7 +376,7 @@ const About = () => {
                       Contact Us <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                </div>
+                </div> */}
               </div>
               <div className="relative hidden md:block">
                 <div className="absolute top-[-20px] right-[-20px] w-64 h-64 bg-hospital-500/20 rounded-full filter blur-3xl"></div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Search, Filter, User, Phone, Mail, Calendar, X, Star } from "lucide-react";
 
@@ -456,8 +455,13 @@ const Doctors = () => {
                 <p className="text-gray-600 mb-6">
                   We're always looking for talented healthcare professionals who are passionate about providing exceptional patient care. Explore career opportunities at MediCare Plus.
                 </p>
-                <Button className="bg-hospital-600 hover:bg-hospital-700">
-                  View Career Opportunities
+                <Button 
+                  className="bg-hospital-600 hover:bg-hospital-700"
+                  asChild
+                >
+                  <Link to="/careers">
+                    View Career Opportunities
+                  </Link>
                 </Button>
               </div>
               <div className="flex justify-center">

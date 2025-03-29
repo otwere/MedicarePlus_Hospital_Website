@@ -86,16 +86,10 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
   }
 
   const getOrGenerateInvoiceNumber = (): string => {
-    const storedInvoiceNumber = localStorage.getItem("invoiceNumber")
-    if (storedInvoiceNumber && paymentData.invoiceNumber === undefined) {
-      return storedInvoiceNumber
-    }
-
+    // Always generate a unique random invoice number if not provided
     const newInvoiceNumber =
       paymentData.invoiceNumber ||
-      `INV-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, "0")}`
+      `INV/${new Date().getFullYear()}/${Math.random().toString(36).substring(2, 8).toUpperCase()}`
 
     localStorage.setItem("invoiceNumber", newInvoiceNumber)
     return newInvoiceNumber
@@ -148,9 +142,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
     // Generate random transaction ID if not provided
     const transactionId =
       paymentData.transactionId ||
-      `TXN-${Math.floor(Math.random() * 1000000)
-        .toString()
-        .padStart(6, "0")}`
+      `TXN-${Math.floor(Math.random().toString(36).substring(2, 8).toUpperCase())}`
 
     // Calculate VAT (16%)
     const vatRate = 0.16
