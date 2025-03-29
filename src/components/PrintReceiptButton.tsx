@@ -85,6 +85,44 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
     return `${firstPart}${maskedMiddle}${lastPart}`
   }
 
+  const getOrGenerateInvoiceNumber = (): string => {
+    const storedInvoiceNumber = localStorage.getItem("invoiceNumber")
+    if (storedInvoiceNumber && paymentData.invoiceNumber === undefined) {
+      return storedInvoiceNumber
+    }
+
+    const newInvoiceNumber =
+      paymentData.invoiceNumber ||
+      `INV-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)
+        .toString()
+        .padStart(4, "0")}`
+
+    localStorage.setItem("invoiceNumber", newInvoiceNumber)
+    return newInvoiceNumber
+  }
+
+  const getOrGenerateControlUnitNo = (): string => {
+    const storedControlUnitNo = localStorage.getItem("controlUnitNo")
+    if (storedControlUnitNo && paymentData.transactionId === undefined) {
+      return storedControlUnitNo
+    }
+
+    const newControlUnitNo = `CU-${Date.now().toString().substring(5)}`
+    localStorage.setItem("controlUnitNo", newControlUnitNo)
+    return newControlUnitNo
+  }
+
+  const getOrGenerateReceiptId = (): string => {
+    const storedReceiptId = localStorage.getItem("receiptId")
+    if (storedReceiptId && paymentData.transactionId === undefined) {
+      return storedReceiptId
+    }
+
+    const newReceiptId = `REC-${Date.now().toString().substring(7)}`
+    localStorage.setItem("receiptId", newReceiptId)
+    return newReceiptId
+  }
+
   const handlePrintReceipt = () => {
     // Create a new window for the receipt
     const receiptWindow = window.open("", "_blank", "width=800,height=600")
@@ -121,15 +159,14 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
     const vatAmount = paymentData.amount ? paymentData.amount - preVatAmount : 0
     const totalWithVat = paymentData.amount || 0
 
-    // Generate dynamic Control Unit No
-    const controlUnitNo = `CU-${Date.now().toString().substring(5)}`
+    // Use the persistent invoice number
+    const invoiceNumber = getOrGenerateInvoiceNumber()
 
-    // Generate invoice number if not provided
-    const invoiceNumber =
-      paymentData.invoiceNumber ||
-      `INV-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, "0")}`
+    // Use the persistent Control Unit No
+    const controlUnitNo = getOrGenerateControlUnitNo()
+
+    // Use the persistent Receipt ID
+    const receiptId = getOrGenerateReceiptId()
 
     // Determine payment status based on payment method
     const isPaid = paymentData.paymentMethod !== "cash"
@@ -603,7 +640,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
               <div class="digital-signature">
                 <p>This is an electronically generated receipt and does not require a physical signature.</p>
                 <p>Control Unit No : ${controlUnitNo}</p>
-                <p>eTMIS KRA Invoice Receipt ID : REC-${Date.now().toString().substring(7)}</p>
+                <p>eTMIS KRA Invoice Receipt ID : ${receiptId}</p>
                 <div class="qr-code" style="margin-top: 15px;">
                   <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MEDICAREPLUS-RECEIPT-${transactionId}" alt="Receipt QR Code">
                   <div class="qr-code-text">Scan to verify receipt</div>

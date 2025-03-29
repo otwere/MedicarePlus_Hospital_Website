@@ -109,40 +109,40 @@ const doctorsByDepartment: Record<
   cardiology: [
     { id: "c1", name: "Dr. Michael Smith", title: "Cardiologist", availability: "High", priority: true },
     { id: "c2", name: "Dr. Emily Johnson", title: "Interventional Cardiologist", availability: "Medium" },
-    { id: "c3", name: "Dr. David Wilson", title: "Heart Rhythm Specialist", availability: "Low" },
+    { id: "c3", name: "Dr. David Wilson", title: "Heart Rhythm Specialist", availability: "Doctor on call" },
   ],
   neurology: [
     { id: "n1", name: "Dr. Sarah Thompson", title: "Neurologist", availability: "Medium", priority: true },
-    { id: "n2", name: "Dr. Robert Lee", title: "Neurosurgeon", availability: "Low" },
+    { id: "n2", name: "Dr. Robert Lee", title: "Neurosurgeon", availability: "Doctor on call" },
     { id: "n3", name: "Dr. Jessica Brown", title: "Stroke Specialist", availability: "High" },
   ],
   orthopedics: [
     { id: "o1", name: "Dr. James Anderson", title: "Orthopedic Surgeon", availability: "High", priority: true },
     { id: "o2", name: "Dr. Patricia Martinez", title: "Sports Medicine Specialist", availability: "Medium" },
-    { id: "o3", name: "Dr. Richard Taylor", title: "Joint Replacement Surgeon", availability: "Low" },
+    { id: "o3", name: "Dr. Richard Taylor", title: "Joint Replacement Surgeon", availability: "Doctor on call" },
   ],
   pediatrics: [
     { id: "p1", name: "Dr. Jennifer White", title: "Pediatrician", availability: "High" },
-    { id: "p2", name: "Dr. Thomas Garcia", title: "Pediatric Neurologist", availability: "Low", priority: true },
+    { id: "p2", name: "Dr. Thomas Garcia", title: "Pediatric Neurologist", availability: "Doctor on call", priority: true },
     { id: "p3", name: "Dr. Lisa Rodriguez", title: "Pediatric Endocrinologist", availability: "Medium" },
   ],
   dermatology: [
     { id: "d1", name: "Dr. Mark Davis", title: "Dermatologist", availability: "High", priority: true },
     { id: "d2", name: "Dr. Linda Wilson", title: "Cosmetic Dermatologist", availability: "Medium" },
-    { id: "d3", name: "Dr. Daniel Harris", title: "Pediatric Dermatologist", availability: "Low" },
+    { id: "d3", name: "Dr. Daniel Harris", title: "Pediatric Dermatologist", availability: "Doctor on call" },
   ],
   ophthalmology: [
     { id: "op1", name: "Dr. Susan Martin", title: "Ophthalmologist", availability: "Medium" },
-    { id: "op2", name: "Dr. John Clark", title: "Retina Specialist", availability: "Low", priority: true },
+    { id: "op2", name: "Dr. John Clark", title: "Retina Specialist", availability: "Doctor on call", priority: true },
     { id: "op3", name: "Dr. Karen Wright", title: "Pediatric Ophthalmologist", availability: "High" },
   ],
   dentistry: [
     { id: "de1", name: "Dr. Charles Lewis", title: "Dentist", availability: "High" },
     { id: "de2", name: "Dr. Nancy Walker", title: "Orthodontist", availability: "Medium", priority: true },
-    { id: "de3", name: "Dr. George Green", title: "Periodontist", availability: "Low" },
+    { id: "de3", name: "Dr. George Green", title: "Periodontist", availability: "Doctor on call" },
   ],
   psychiatry: [
-    { id: "ps1", name: "Dr. Elizabeth Adams", title: "Psychiatrist", availability: "Low", priority: true },
+    { id: "ps1", name: "Dr. Elizabeth Adams", title: "Psychiatrist", availability: "Doctor on call", priority: true },
     { id: "ps2", name: "Dr. William Hall", title: "Child Psychiatrist", availability: "Medium" },
     { id: "ps3", name: "Dr. Margaret Young", title: "Geriatric Psychiatrist", availability: "High" },
   ],
@@ -184,6 +184,16 @@ const insuranceProviders = [
 // Steps in the appointment booking process
 type BookingStep = "form" | "payment" | "confirmation"
 type BookingType = "individual" | "corporate" | "group"
+
+const maskEmail = (email: string): string => {
+  const [localPart, domain] = email.split("@")
+  const maskedLocalPart = localPart.length > 2 ? localPart[0] + "*".repeat(localPart.length - 2) + localPart.slice(-1) : localPart
+  return `${maskedLocalPart}@${domain}`
+}
+
+const maskPhone = (phone: string): string => {
+  return phone.replace(/\d(?=\d{4})/g, "*")
+}
 
 const Appointments = () => {
   const [step, setStep] = useState<BookingStep>("form")
@@ -500,6 +510,8 @@ const Appointments = () => {
 
     return {
       patientName: appointmentDetails.name,
+      email: maskEmail(appointmentDetails.email),
+      phone: maskPhone(appointmentDetails.phone),
       serviceType: `${appointmentDetails.department.charAt(0).toUpperCase() + appointmentDetails.department.slice(1)} Consultation`,
       amount: amount,
       paymentMethod:
@@ -517,8 +529,6 @@ const Appointments = () => {
       doctorName: doctorInfo?.name || "To be assigned",
       appointmentDate: appointmentDetails.date ? format(appointmentDetails.date, "MMMM d, yyyy") : "",
       appointmentTime: getTimeDisplay(appointmentDetails.timePreference),
-      email: appointmentDetails.email,
-      phone: appointmentDetails.phone,
       companyName: appointmentDetails.companyName || "",
       employeeId: appointmentDetails.employeeId || "",
       groupBooking: appointmentDetails.groupBooking,
@@ -540,7 +550,7 @@ const Appointments = () => {
                 Book an Appointment
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Schedule your visit with our medical specialists. Please fill out the form below, and our team will
+                Schedule your visit with our medical specialists. Please fill out the form beDoctor on call, and our team will
                 contact you to confirm your appointment.
               </p>
             </div>
@@ -1032,7 +1042,7 @@ const Appointments = () => {
                                               <Clock className="h-3.5 w-3.5 text-hospital-500" />
                                               <span>{slot.label}</span>
                                               {slot.disabled && (
-                                                <span className="text-xs text-red-500 ml-1">(Unavailable)</span>
+                                                <span className="text-xs text-red-500 ml-1">(Time Slot Closed)</span>
                                               )}
                                             </div>
                                           </SelectItem>
@@ -1057,7 +1067,7 @@ const Appointments = () => {
                                               <Clock className="h-3.5 w-3.5 text-hospital-500" />
                                               <span>{slot.label}</span>
                                               {slot.disabled && (
-                                                <span className="text-xs text-red-500 ml-1">(Unavailable)</span>
+                                                <span className="text-xs text-red-500 ml-1">(Time Slot Closed)</span>
                                               )}
                                             </div>
                                           </SelectItem>
@@ -1082,7 +1092,7 @@ const Appointments = () => {
                                               <Clock className="h-3.5 w-3.5 text-hospital-500" />
                                               <span>{slot.label}</span>
                                               {slot.disabled && (
-                                                <span className="text-xs text-red-500 ml-1">(Unavailable)</span>
+                                                <span className="text-xs text-red-500 ml-1">(Time Slot Closed)</span>
                                               )}
                                             </div>
                                           </SelectItem>
@@ -1101,7 +1111,7 @@ const Appointments = () => {
                             name="insuranceProvider"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Insurance Provider (Optional)</FormLabel>
+                                <FormLabel>Insurance Provider (Only if you are using Insurance for Payment)</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl>
                                     <SelectTrigger>
@@ -1155,21 +1165,7 @@ const Appointments = () => {
                             )}
                           />
 
-                          {/* Referral Code */}
-                          <FormField
-                            control={form.control}
-                            name="referralCode"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Referral Code (Optional)</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Enter referral code if you have one" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
+                         
                           <Button type="submit" className="w-full bg-hospital-600 hover:bg-hospital-700">
                             <ArrowRight className="mr-2 h-4 w-4" />
                             Continue to Payment
@@ -1198,28 +1194,28 @@ const Appointments = () => {
                           <div className="flex items-start gap-2">
                             <User className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Patient Name:</p>
+                              <p className="text-gray-500">Patient Name :</p>
                               <p className="font-medium">{appointmentDetails.name}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Calendar className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Date:</p>
+                              <p className="text-gray-500">Appointment Date :</p>
                               <p className="font-medium">{format(appointmentDetails.date, "MMMM d, yyyy")}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Clock className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Time:</p>
+                              <p className="text-gray-500">Appointment Time :</p>
                               <p className="font-medium">{getTimeDisplay(appointmentDetails.timePreference)}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Mail className="h-4 w-4 text-gray-500 mt-0.5" />
                             <div>
-                              <p className="text-gray-500">Department:</p>
+                              <p className="text-gray-500">Department :</p>
                               <p className="font-medium capitalize">{appointmentDetails.department}</p>
                             </div>
                           </div>
@@ -1229,7 +1225,7 @@ const Appointments = () => {
                             <div className="flex items-start gap-2 col-span-2">
                               <User className="h-4 w-4 text-gray-500 mt-0.5" />
                               <div>
-                                <p className="text-gray-500">Doctor:</p>
+                                <p className="text-gray-500">Specialist Doctor :</p>
                                 <p className="font-medium">
                                   {doctorsByDepartment[appointmentDetails.department]?.find(
                                     (d) => d.id === appointmentDetails.doctor,
@@ -1244,7 +1240,7 @@ const Appointments = () => {
                             <div className="flex items-start gap-2 col-span-2">
                               <Building className="h-4 w-4 text-gray-500 mt-0.5" />
                               <div>
-                                <p className="text-gray-500">Company:</p>
+                                <p className="text-gray-500">Company :</p>
                                 <p className="font-medium">{appointmentDetails.companyName}</p>
                               </div>
                             </div>
@@ -1255,7 +1251,7 @@ const Appointments = () => {
                             <div className="flex items-start gap-2 col-span-2">
                               <Users className="h-4 w-4 text-gray-500 mt-0.5" />
                               <div>
-                                <p className="text-gray-500">Group Size:</p>
+                                <p className="text-gray-500">Group Size :</p>
                                 <p className="font-medium">{appointmentDetails.numberOfAttendees} people</p>
                               </div>
                             </div>
@@ -1294,34 +1290,34 @@ const Appointments = () => {
 
                         <div className="space-y-3">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Reference:</span>
+                            <span className="text-gray-600">Reference :</span>
                             <span className="font-medium">APT-{Math.floor(100000 + Math.random() * 900000)}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Patient:</span>
+                            <span className="text-gray-600">Patient :</span>
                             <span className="font-medium">{appointmentDetails.name}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Email:</span>
-                            <span className="font-medium">{appointmentDetails.email}</span>
+                            <span className="text-gray-600">Email :</span>
+                            <span className="font-medium">{maskEmail(appointmentDetails.email)}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Phone:</span>
-                            <span className="font-medium">{appointmentDetails.phone}</span>
+                            <span className="text-gray-600">Phone :</span>
+                            <span className="font-medium">{maskPhone(appointmentDetails.phone)}</span>
                           </div>
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Department:</span>
+                            <span className="text-gray-600">Department :</span>
                             <span className="font-medium capitalize">{appointmentDetails.department}</span>
                           </div>
 
                           {/* Display selected doctor in confirmation */}
                           {appointmentDetails.doctor && (
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Doctor:</span>
+                              <span className="text-gray-600">Specialist Doctor :</span>
                               <span className="font-medium">
                                 {doctorsByDepartment[appointmentDetails.department]?.find(
                                   (d) => d.id === appointmentDetails.doctor,
@@ -1331,12 +1327,12 @@ const Appointments = () => {
                           )}
 
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Date:</span>
+                            <span className="text-gray-600">Appointment Date :</span>
                             <span className="font-medium">{format(appointmentDetails.date, "MMMM d, yyyy")}</span>
                           </div>
 
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Time:</span>
+                            <span className="text-gray-600">Appointment Time :</span>
                             <span className="font-medium">{getTimeDisplay(appointmentDetails.timePreference)}</span>
                           </div>
 
@@ -1360,14 +1356,14 @@ const Appointments = () => {
                             <h4 className="font-medium text-gray-900 mb-2">Payment Information</h4>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Amount:</span>
+                              <span className="text-gray-600">Invoiced Amount :</span>
                               <span className="font-medium text-hospital-700">
                                 KES {calculateAppointmentCost().toFixed(2)}
                               </span>
                             </div>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Payment Method:</span>
+                              <span className="text-gray-600">Payment Method :</span>
                               <span className="font-medium">
                                 {paymentMethod === "mobile_money"
                                   ? "Mobile Money"
@@ -1377,24 +1373,24 @@ const Appointments = () => {
                                       ? "Bank Transfer"
                                       : paymentMethod === "insurance"
                                         ? "Insurance"
-                                        : "Cash at Hospital"}
+                                        : "Pay via Insurance"}
                               </span>
                             </div>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Transaction ID:</span>
+                              <span className="text-gray-600">Transaction ID :</span>
                               <span className="font-medium font-mono text-sm bg-gray-100 px-2 py-1 rounded">
                                 {transactionId}
                               </span>
                             </div>
 
                             <div className="flex justify-between">
-                              <span className="text-gray-600">Payment Date:</span>
+                              <span className="text-gray-600">Payment Date :</span>
                               <span className="font-medium">{format(new Date(paymentDate), "MMMM d, yyyy")}</span>
                             </div>
 
                             <div className="flex justify-between mt-2">
-                              <span className="text-gray-600">Status:</span>
+                              <span className="text-gray-600">Invoice  Status :</span>
                               <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Paid</Badge>
                             </div>
                           </div>
@@ -1405,7 +1401,7 @@ const Appointments = () => {
                             <Button
                               onClick={handleNewAppointment}
                               variant="outline"
-                              className="flex-1 border-hospital-200 text-hospital-700 hover:bg-hospital-50"
+                              className="flex-1 border-hospital-200 text-hospital-700 hover:bg-orange-500"
                             >
                               Book Another Appointment
                             </Button>
@@ -1514,7 +1510,7 @@ const Appointments = () => {
 
                     <div className="flex items-center gap-2 text-hospital-700">
                       <Briefcase className="h-4 w-4" />
-                      <span className="font-medium">corporate@hospital.com</span>
+                      <span className="font-medium">appointments@medicareplus.com</span>
                     </div>
                   </div>
                 </div>
@@ -1531,7 +1527,7 @@ const Appointments = () => {
           <DialogHeader>
             <DialogTitle>Register Corporate Account</DialogTitle>
             <DialogDescription>
-              Complete the form below to register your company for corporate benefits.
+              Complete the form beDoctor on call to register your company for corporate benefits.
             </DialogDescription>
           </DialogHeader>
           <Form {...corporateAccountForm}>
