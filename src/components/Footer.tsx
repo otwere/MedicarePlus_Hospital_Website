@@ -71,16 +71,16 @@ const Footer = () => {
             <h3 className="text-lg font-display font-semibold mb-6">Contact Us</h3>
             <div className="space-y-4">
               <p className="text-gray-300">
-                <strong className="block text-white mb-1">Address:</strong>
+                <strong className="block text-white mb-1">Address :</strong>
                 1234 Healthcare Blvd, <br />
-                Medical District, Nairobi , Kenya
+                Medical District, Nairobi - Kenya
               </p>
               <p className="text-gray-300">
-                <strong className="block text-white mb-1">Phone:</strong>
-                +254 700 520 008
+                <strong className="block text-white mb-1">Phone :</strong>
+                +254 700 520 008 <br /> +25
               </p>
               <p className="text-gray-300">
-                <strong className="block text-white mb-1">Email:</strong>
+                <strong className="block text-white mb-1">Email :</strong>
                 info@medicareplus.com
               </p>
               <Button asChild className="mt-2 bg-hospital-500 hover:bg-hospital-600">
@@ -93,7 +93,7 @@ const Footer = () => {
         <div className="border-t border-hospital-800 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} MediCare Plus. All rights reserved.
+              © 2005 - {new Date().getFullYear()} MediCare Plus. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>

@@ -812,9 +812,9 @@ const Appointments = () => {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Full Name</FormLabel>
+                                  <FormLabel>Patient Full Name</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Full Names" {...field} />
+                                    <Input placeholder="Patient  Full Names" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>

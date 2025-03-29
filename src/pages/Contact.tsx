@@ -164,30 +164,18 @@ const Contact = () => {
                   <div className="flex items-start gap-4">
                     <Clock className="h-6 w-6 text-hospital-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h3 className="font-medium text-gray-900">Hours</h3>
+                      <h3 className="font-medium text-gray-900"> Open Hours</h3>
                       <p className="text-gray-600">
-                        Monday - Friday: 8:00 AM - 8:00 PM<br />
+                        {/* Monday - Friday: 8:00 AM - 8:00 PM<br />
                         Saturday: 9:00 AM - 5:00 PM<br />
-                        Sunday: 10:00 AM - 2:00 PM<br />
-                        <span className="text-hospital-600 font-medium">Emergency Care: 24/7</span>
+                        Sunday: 10:00 AM - 2:00 PM<br /> */}
+                        <span className="text-hospital-600 font-medium">Emergency Care : 24/7</span>
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>             
               
-              <div className="rounded-xl overflow-hidden h-[300px] shadow-sm">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.3059353029!2d-74.25986548248684!3d40.69714941932609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2suk!4v1650468302213!5m2!1sen!2suk" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  allowFullScreen 
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Hospital Location"
-                ></iframe>
-              </div>
             </div>
           </div>
         </div>
