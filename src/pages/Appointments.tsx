@@ -1040,7 +1040,7 @@ const Appointments = () => {
                                       <SelectItem
                                         value="morning"
                                         disabled
-                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 select-none"
+                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2"
                                       >
                                         Morning
                                       </SelectItem>
@@ -1066,7 +1066,7 @@ const Appointments = () => {
                                       <SelectItem
                                         value="afternoon"
                                         disabled
-                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1 select-none"
+                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1"
                                       >
                                         Afternoon
                                       </SelectItem>
@@ -1092,7 +1092,7 @@ const Appointments = () => {
                                       <SelectItem
                                         value="evening"
                                         disabled
-                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1 select-none"
+                                        className="font-semibold text-hospital-700 bg-hospital-50 py-2 mt-1"
                                       >
                                         Evening
                                       </SelectItem>

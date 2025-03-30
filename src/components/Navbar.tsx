@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -40,21 +39,11 @@ const Navbar = () => {
     { name: "Ambulance Services", path: "/ambulatory-services" },
   ];
 
-  const doctorLinks = [
-    { name: "Find a Doctor", path: "/doctors" },
-    { name: "Doctor Schedules", path: "/doctors/schedules" },
-    { name: "Specialist Consultation", path: "/doctors/specialists" },
-  ];
-
-  const careerLinks = [
-    { name: "Job Openings", path: "/careers" },
-    { name: "Medical Residency", path: "/careers/residency" },
-    { name: "Internship Programs", path: "/careers/internships" },
-  ];
-
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
+    { name: "Specialists/Doctors", path: "/doctors" },
+    { name: "Careers", path: "/careers" },
     { name: "Contact", path: "/contact" },
   ];
 
@@ -132,79 +121,45 @@ const Navbar = () => {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className={cn(
+                {/* <NavigationMenuTrigger className={cn(
                   "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
                   location.pathname.includes("/doctors")
                     ? "text-hospital-600 font-semibold"
                     : "text-gray-700 hover:text-hospital-600"
                 )}>
                   Doctors
-                </NavigationMenuTrigger>
+                </NavigationMenuTrigger> */}
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4">
-                    {doctorLinks.map((link) => (
-                      <li key={link.name}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to={link.path}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-orange-400 hover:text-hospital-600"
-                          >
-                            <div className="text-sm font-medium leading-none">{link.name}</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
+                    {/* Removed doctorLinks */}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className={cn(
+                {/* <NavigationMenuTrigger className={cn(
                   "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
                   location.pathname.includes("/careers")
                     ? "text-hospital-600 font-semibold"
                     : "text-gray-700 hover:text-hospital-600"
                 )}>
                   Careers
-                </NavigationMenuTrigger>
+                </NavigationMenuTrigger> */}
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4">
-                    {careerLinks.map((link) => (
-                      <li key={link.name}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            to={link.path}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-orange-400 hover:text-hospital-600"
-                          >
-                            <div className="text-sm font-medium leading-none">{link.name}</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
+                    {/* Removed careerLinks */}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* <NavigationMenuItem>
-                <Link 
-                  to="/ambulatory-services"
-                  className={cn(
-                    "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors",
-                    location.pathname === "/ambulatory-services"
-                      ? "text-hospital-600 font-semibold"
-                      : "text-gray-700 hover:text-hospital-600"
-                  )}
-                >
-                  Ambulance Services
-                </Link>
-              </NavigationMenuItem> */}
+              
             </NavigationMenuList>
           </NavigationMenu>
 
           <div className="flex items-center gap-4">
             <Button variant="outline" className="border-hospital-500 text-hospital-700 hover:bg-orange-400 transition-all group">
               <Phone size={16} className="mr-2 text-hospital-600 group-hover:rotate-12 transition-transform" />
-              <span className="font-medium">Emergency : 911</span>
+              <span className="font-medium">Emergency : 911 or 999</span>
             </Button>
             <Button asChild className="bg-hospital-600 hover:bg-hospital-700 group relative overflow-hidden">
               <Link to="/appointments" className="flex items-center">
@@ -300,16 +255,7 @@ const Navbar = () => {
                 Doctors <ChevronDown className="ml-2 h-4 w-4" />
               </div>
               <div className="mt-2 grid grid-cols-1 gap-2">
-                {doctorLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-sm text-gray-700 py-1 hover:text-hospital-600"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                {/* Removed doctorLinks */}
               </div>
             </div>
 
@@ -318,16 +264,7 @@ const Navbar = () => {
                 Careers <ChevronDown className="ml-2 h-4 w-4" />
               </div>
               <div className="mt-2 grid grid-cols-1 gap-2">
-                {careerLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-sm text-gray-700 py-1 hover:text-hospital-600"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                {/* Removed careerLinks */}
               </div>
             </div>
 
