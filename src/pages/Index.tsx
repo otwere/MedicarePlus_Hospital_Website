@@ -275,15 +275,15 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="flex items-center gap-3 justify-center md:justify-start">
                 <Phone className="h-5 w-5 text-hospital-500" />
-                <span className="text-gray-700">Emergency: +254 700 520 008</span>
+                <span className="text-gray-700">Emergency : +254 700 520 008</span>
               </div>
               <div className="flex items-center gap-3 justify-center">
                 <Clock className="h-5 w-5 text-hospital-500" />
-                <span className="text-gray-700">Open Hours: Mon-Fri 8:00 AM - 8:00 PM</span>
+                <span className="text-gray-700">Open Hours : Mon-Fri 8:00 AM - 8:00 PM</span>
               </div>
               <div className="flex items-center gap-3 justify-center md:justify-end">
                 <MapPin className="h-5 w-5 text-hospital-500" />
-                <span className="text-gray-700">123 Healthcare Avenue, Medical District</span>
+                <span className="text-gray-700">123 Healthcare Avenue, Medical District - Nairobi</span>
               </div>
             </div>
           </div>
