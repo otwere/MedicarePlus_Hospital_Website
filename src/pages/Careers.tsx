@@ -12,6 +12,7 @@ import {
   Printer,
   FileText,
   CheckCircle,
+  User,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -279,11 +280,10 @@ const jobs = [
     ],
   },
 ];
-
 // Mock storage for submitted applications
 const submittedApplications: Record<
   string,
-  { status: "Shortlisted" | "Not Shortlisted" | "Under Review"; jobTitle: string }
+  { status: "Shortlisted" | "Not Shortlisted" | "Under Review"; jobTitle: string; applicantName: string }
 > = {};
 
 const FilterButtons = ({
@@ -331,7 +331,7 @@ const Careers = () => {
   const [applicationData, setApplicationData] = useState<any>(null);
   const [refNumber, setRefNumber] = useState(""); // Reference number state
   const [applicationStatus, setApplicationStatus] = useState<
-    { status: "Shortlisted" | "Not Shortlisted" | "Under Review"; jobTitle: string } | null
+    { status: "Shortlisted" | "Not Shortlisted" | "Under Review"; jobTitle: string; applicantName: string } | null
   >(null);
 
   const handleApply = (jobId: string) => {
@@ -377,11 +377,12 @@ const Careers = () => {
     setApplicationData(processedData);
 
     // Store the application in mock storage
-    const statuses = ["Shortlisted", "Not Shortlisted", "Under Review"];
-    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    const statuses: Array<"Shortlisted" | "Not Shortlisted" | "Under Review"> = ["Shortlisted", "Not Shortlisted", "Under Review"];
+    const randomStatus: "Shortlisted" | "Not Shortlisted" | "Under Review" = statuses[Math.floor(Math.random() * statuses.length)];
     submittedApplications[newRefNumber] = {
       status: randomStatus, // Randomly assign status for demo purposes
       jobTitle: currentJobDetails?.title || "Unknown Job",
+      applicantName: fullName, // Store applicant's name
     };
 
     setIsApplicationModalOpen(false);
@@ -711,7 +712,6 @@ const Careers = () => {
                 </p>
               </div>
             </div>
-
             {/* Job Details Card */}
             <div className="border rounded-lg overflow-hidden">
               <div className="bg-hospital-100 px-4 py-3 border-b">
@@ -736,7 +736,6 @@ const Careers = () => {
                 </div>
               </div>
             </div>
-
             {/* Applicant Information Card */}
             <div className="border rounded-lg overflow-hidden">
               <div className="bg-hospital-100 px-4 py-3 border-b">
@@ -761,7 +760,6 @@ const Careers = () => {
                 </div>
               </div>
             </div>
-
             {/* Application Details Card */}
             <div className="border rounded-lg overflow-hidden">
               <div className="bg-hospital-100 px-4 py-3 border-b">
@@ -796,7 +794,6 @@ const Careers = () => {
                 </div>
               </div>
             </div>
-
             {/* Next Steps */}
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 print:hidden">
               <h4 className="font-medium text-blue-800 mb-2">What happens next?</h4>
@@ -829,7 +826,6 @@ const Careers = () => {
                 </li>
               </ul>
             </div>
-
             {/* Print Notice - only visible when printing */}
             <div className="hidden print:block border-t pt-4 mt-4">
               <p className="text-xs text-gray-500">
@@ -852,19 +848,20 @@ const Careers = () => {
 
       {/* Application Status Check Modal */}
       <Dialog open={isStatusCheckModalOpen} onOpenChange={setIsStatusCheckModalOpen}>
-        <DialogContent className="max-w-xl bg-white rounded-2xl shadow-xl border border-gray-200">
+        <DialogContent className="max-w-2xl bg-white rounded-2xl shadow-xl border border-gray-200">
           {/* Header */}
           <DialogHeader className="flex items-center gap-3 border-b border-gray-200 pb-4">
             <FileText className="h-8 w-8 text-hospital-600" />
             <div>
-              <DialogTitle className="text-2xl font-bold text-hospital-800">
+              <DialogTitle className="text-2xl font-bold text-hospital-800 text-center">
                 Check Application Status
               </DialogTitle>
               <DialogDescription className="text-sm text-gray-600">
-                Enter your reference number below to view the status of your application.
+                Enter your reference number below to view detailed information about your application.
               </DialogDescription>
             </div>
           </DialogHeader>
+
           {/* Body */}
           <div className="py-6 space-y-4">
             {/* Reference Number Input */}
@@ -888,6 +885,7 @@ const Careers = () => {
                 )}
               </div>
             </div>
+
             {/* Check Status Button */}
             <Button
               onClick={handleCheckStatus}
@@ -896,6 +894,7 @@ const Careers = () => {
             >
               Check Status
             </Button>
+
             {/* Status Result */}
             {applicationStatus && (
               <motion.div
@@ -904,29 +903,90 @@ const Careers = () => {
                 transition={{ duration: 0.3 }}
                 className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-2"
               >
+                {/* Applicant Name */}
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5 text-gray-600" />
+                  <p className="text-lg font-medium text-gray-800">
+                    Applicant Name :{" "}
+                    <span className="font-medium">{applicationStatus.applicantName}</span>
+                  </p>
+                </div>
+
+                {/* Application Status */}
                 <div className="flex items-center gap-2">
                   <CheckCircle
                     className={`h-5 w-5 ${
-                      applicationStatus.status === "Shortlisted" ? "text-green-500" : "text-red-500"
+                      applicationStatus.status === "Shortlisted"
+                        ? "text-green-500"
+                        : applicationStatus.status === "Under Review"
+                        ? "text-yellow-500"
+                        : "text-red-500"
                     }`}
                   />
-                  <p className="text-lg font-semibold text-gray-800">
-                    Status:{" "}
+                  <p className="text-lg font-medium text-gray-800">
+                    Status :{" "}
                     <span
                       className={`${
-                        applicationStatus.status === "Shortlisted" ? "text-green-600" : "text-red-600"
+                        applicationStatus.status === "Shortlisted"
+                          ? "text-green-600"
+                          : applicationStatus.status === "Under Review"
+                          ? "text-yellow-600"
+                          : "text-red-600"
                       }`}
                     >
                       {applicationStatus.status}
                     </span>
                   </p>
                 </div>
-                <p className="text-sm text-gray-600">
-                  Job Applied For: <span className="font-medium">{applicationStatus.jobTitle}</span>
-                </p>
+
+                {/* Job Details */}
+                <div className="space-y-1">
+                  <p className="text-sm text-gray-600">
+                    Job Applied For : <span className="font-medium">{applicationStatus.jobTitle}</span>
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Reference Number : <span className="font-mono font-medium">{refNumber}</span>
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Date Submitted :{" "}
+                    <span className="font-medium">
+                      {new Date().toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </p>
+                </div>
+
+                {/* Additional Information */}
+                <div className="border-t border-gray-200 pt-3">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Next Steps</h4>
+                  <ul className="text-sm text-gray-600 space-y-1 list-disc pl-5">
+                    {applicationStatus.status === "Shortlisted" && (
+                      <li>
+                        Our HR team will contact you  to schedule an interview date and time. Ensure your phone
+                        and email are accessible.
+                      </li>
+                    )}
+                    {applicationStatus.status === "Under Review" && (
+                      <li>
+                        Your application is currently under review. We appreciate your patience while we
+                        evaluate all candidates.
+                      </li>
+                    )}
+                    {applicationStatus.status === "Not Shortlisted" && (
+                      <li>
+                        Unfortunately, your application was not shortlisted for this role. We encourage
+                        you to apply for other opportunities that match your skills.
+                      </li>
+                    )}
+                  </ul>
+                </div>
               </motion.div>
             )}
           </div>
+
           {/* Footer */}
           <DialogFooter className="border-t border-gray-200 pt-4">
             <Button
