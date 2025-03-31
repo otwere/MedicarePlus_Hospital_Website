@@ -1,18 +1,31 @@
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-import { Helmet } from "react-helmet"
-import { motion, AnimatePresence } from "framer-motion"
-import { List, Grid, Layers, Check, X, Printer, FileText, CheckCircle } from "lucide-react"
-
-import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
-import JobCard from "@/components/JobCard"
-import JobApplicationForm from "@/components/JobApplicationForm"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+"use client";
+import type React from "react";
+import { useState } from "react";
+import { Helmet } from "react-helmet";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  List,
+  Grid,
+  Layers,
+  Check,
+  X,
+  Printer,
+  FileText,
+  CheckCircle,
+} from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import JobCard from "@/components/JobCard";
+import JobApplicationForm from "@/components/JobApplicationForm";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -20,9 +33,10 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog"
-import { toast } from "sonner"
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
+// Mock data for jobs
 const jobs = [
   {
     id: "job-001",
@@ -264,9 +278,21 @@ const jobs = [
       "401(k) plan with employer matching",
     ],
   },
-]
+];
 
-const FilterButtons = ({ filter, setFilter }: { filter: string; setFilter: (filter: string) => void }) => {
+// Mock storage for submitted applications
+const submittedApplications: Record<
+  string,
+  { status: "Shortlisted" | "Not Shortlisted" | "Under Review"; jobTitle: string }
+> = {};
+
+const FilterButtons = ({
+  filter,
+  setFilter,
+}: {
+  filter: string;
+  setFilter: (filter: string) => void;
+}) => {
   return (
     <div className="flex flex-wrap gap-2 mb-6">
       <Button
@@ -286,8 +312,8 @@ const FilterButtons = ({ filter, setFilter }: { filter: string; setFilter: (filt
         Open Positions
       </Button>
     </div>
-  )
-}
+  );
+};
 
 const Careers = () => {
   const [filter, setFilter] = useState({
@@ -295,78 +321,102 @@ const Careers = () => {
     department: "All",
     location: "All",
     type: "All",
-  })
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [selectedJob, setSelectedJob] = useState<string | null>(null)
-  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false)
-  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false)
-  const [currentJobDetails, setCurrentJobDetails] = useState<(typeof jobs)[0] | null>(null)
-  const [applicationData, setApplicationData] = useState<any>(null)
+  });
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [selectedJob, setSelectedJob] = useState<string | null>(null);
+  const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isStatusCheckModalOpen, setIsStatusCheckModalOpen] = useState(false);
+  const [currentJobDetails, setCurrentJobDetails] = useState<(typeof jobs)[0] | null>(null);
+  const [applicationData, setApplicationData] = useState<any>(null);
+  const [refNumber, setRefNumber] = useState(""); // Reference number state
+  const [applicationStatus, setApplicationStatus] = useState<
+    { status: "Shortlisted" | "Not Shortlisted" | "Under Review"; jobTitle: string } | null
+  >(null);
 
   const handleApply = (jobId: string) => {
-    setSelectedJob(jobId)
-    const jobDetails = jobs.find((job) => job.id === jobId)
+    setSelectedJob(jobId);
+    const jobDetails = jobs.find((job) => job.id === jobId);
     if (jobDetails) {
-      setCurrentJobDetails(jobDetails)
-      setIsApplicationModalOpen(true)
+      setCurrentJobDetails(jobDetails);
+      setIsApplicationModalOpen(true);
     }
-  }
+  };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter({ ...filter, searchTerm: e.target.value })
-  }
+    setFilter({ ...filter, searchTerm: e.target.value });
+  };
 
   const handleDepartmentChange = (value: string) => {
-    setFilter({ ...filter, department: value })
-  }
+    setFilter({ ...filter, department: value });
+  };
 
   const handleLocationChange = (value: string) => {
-    setFilter({ ...filter, location: value })
-  }
+    setFilter({ ...filter, location: value });
+  };
 
   const handleTypeChange = (value: string) => {
-    setFilter({ ...filter, type: value })
-  }
+    setFilter({ ...filter, type: value });
+  };
 
   const handleApplicationSubmit = (data: any) => {
-    console.log("Form submission data:", data) // Log the entire data object
-
-    // Create a full name from firstName and lastName
+    console.log("Form submission data:", data);
     const fullName =
       data.firstName && data.lastName
         ? `${data.firstName} ${data.lastName}`.trim()
-        : data.firstName || data.lastName || "Applicant"
-
-    // Create a new processed data object with the fullName field
+        : data.firstName || data.lastName || "Applicant";
     const processedData = {
       ...data,
       fullName,
-    }
+    };
+    console.log("Processed application data:", processedData);
 
-    console.log("Processed application data:", processedData)
+    // Generate a unique reference number
+    const newRefNumber = `MED-${Math.floor(100000 + Math.random() * 900000)}`;
+    setRefNumber(newRefNumber); // Store reference number in state
+    setApplicationData(processedData);
 
-    setApplicationData(processedData)
-    setIsApplicationModalOpen(false)
-    setIsConfirmationModalOpen(true)
-    toast.success(`Application submitted successfully, ${fullName}!`)
-  }
+    // Store the application in mock storage
+    const statuses = ["Shortlisted", "Not Shortlisted", "Under Review"];
+    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    submittedApplications[newRefNumber] = {
+      status: randomStatus, // Randomly assign status for demo purposes
+      jobTitle: currentJobDetails?.title || "Unknown Job",
+    };
+
+    setIsApplicationModalOpen(false);
+    setIsConfirmationModalOpen(true);
+
+    // Toast notification with the reference number
+    toast.success(
+      `Application submitted successfully, ${fullName}! Your reference number is ${newRefNumber}.`
+    );
+  };
 
   const handlePrint = () => {
-    window.print()
-  }
+    window.print();
+  };
 
   const filteredJobs = jobs.filter((job) => {
-    const searchTermRegex = new RegExp(filter.searchTerm, "i")
-    const departmentMatch = filter.department === "All" || job.department === filter.department
-    const locationMatch = filter.location === "All" || job.location === filter.location
-    const typeMatch = filter.type === "All" || job.type === filter.type
+    const searchTermRegex = new RegExp(filter.searchTerm, "i");
+    const departmentMatch = filter.department === "All" || job.department === filter.department;
+    const locationMatch = filter.location === "All" || job.location === filter.location;
+    const typeMatch = filter.type === "All" || job.type === filter.type;
+    return searchTermRegex.test(job.title) && departmentMatch && locationMatch && typeMatch;
+  });
 
-    return searchTermRegex.test(job.title) && departmentMatch && locationMatch && typeMatch
-  })
+  const uniqueDepartments = ["All", ...new Set(jobs.map((job) => job.department))];
+  const uniqueLocations = ["All", ...new Set(jobs.map((job) => job.location))];
+  const uniqueTypes = ["All", ...new Set(jobs.map((job) => job.type))];
 
-  const uniqueDepartments = ["All", ...new Set(jobs.map((job) => job.department))]
-  const uniqueLocations = ["All", ...new Set(jobs.map((job) => job.location))]
-  const uniqueTypes = ["All", ...new Set(jobs.map((job) => job.type))]
+  const handleCheckStatus = () => {
+    const status = submittedApplications[refNumber];
+    if (status) {
+      setApplicationStatus(status);
+    } else {
+      toast.error("Invalid reference number. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -377,9 +427,7 @@ const Careers = () => {
           content="Explore career opportunities at MediCare Plus. Join our team and make a difference in healthcare."
         />
       </Helmet>
-
       <Navbar />
-
       <main className="pt-24 pb-16">
         {/* Hero Section */}
         <section className="bg-hospital-600 wavy-bg-pattern relative overflow-hidden">
@@ -402,6 +450,12 @@ const Careers = () => {
               >
                 Be a part of a dedicated team committed to providing exceptional healthcare services.
               </motion.p>
+              <Button
+                onClick={() => setIsStatusCheckModalOpen(true)}
+                className="mt-6 bg-hospital-600 hover:bg-hospital-700 text-white font-semibold px-6 py-3 rounded-lg transition-all"
+              >
+                Check Application Status
+              </Button>
             </div>
           </div>
           <div className="wavy-line"></div>
@@ -412,16 +466,20 @@ const Careers = () => {
           <div className="container mx-auto px-4">
             <div className="md:flex md:items-center md:justify-between mb-8">
               <div className="mb-4 md:mb-0">
-                <h2 className="text-3xl font-display font-bold text-hospital-800 mb-2">Current Openings</h2>
+                <h2 className="text-3xl font-display font-bold text-hospital-800 mb-2">
+                  Current Openings
+                </h2>
                 <p className="text-lg text-gray-600">
-                  Explore our current job openings and find the perfect fit for your skills and experience.
+                  Explore our current job openings and find the perfect fit for your skills and
+                  experience.
                 </p>
               </div>
-
               <div className="flex items-center space-x-4">
                 <Button
                   variant="outline"
-                  className={`h-9 px-2 rounded-md ${viewMode === "grid" ? "bg-hospital-100 text-hospital-700 border-hospital-300" : ""}`}
+                  className={`h-9 px-2 rounded-md ${
+                    viewMode === "grid" ? "bg-hospital-100 text-hospital-700 border-hospital-300" : ""
+                  }`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4 mr-2" />
@@ -429,7 +487,9 @@ const Careers = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className={`h-9 px-2 rounded-md ${viewMode === "list" ? "bg-hospital-100 text-hospital-700 border-hospital-300" : ""}`}
+                  className={`h-9 px-2 rounded-md ${
+                    viewMode === "list" ? "bg-hospital-100 text-hospital-700 border-hospital-300" : ""
+                  }`}
                   onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4 mr-2" />
@@ -500,7 +560,11 @@ const Careers = () => {
               ) : (
                 <motion.div
                   key={viewMode}
-                  className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      : "space-y-4"
+                  }
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -523,10 +587,12 @@ const Careers = () => {
         {/* Benefits Section */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-display font-bold text-hospital-800 mb-4">Why Join Us?</h2>
+            <h2 className="text-3xl font-display font-bold text-hospital-800 mb-4">
+              Why Join Us?
+            </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-              At MediCare Plus, we value our employees and offer a comprehensive benefits package to support their
-              well-being and professional growth.
+              At MediCare Plus, we value our employees and offer a comprehensive benefits package to
+              support their well-being and professional growth.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
@@ -536,10 +602,12 @@ const Careers = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <h3 className="text-xl font-semibold text-hospital-700 mb-2">Competitive Compensation</h3>
+                  <h3 className="text-xl font-semibold text-hospital-700 mb-2">
+                    Competitive Compensation
+                  </h3>
                   <p className="text-gray-600">
-                    We offer competitive salaries and performance-based bonuses to reward our employees for their hard
-                    work and dedication.
+                    We offer competitive salaries and performance-based bonuses to reward our
+                    employees for their hard work and dedication.
                   </p>
                 </motion.div>
               </div>
@@ -550,10 +618,12 @@ const Careers = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <h3 className="text-xl font-semibold text-hospital-700 mb-2">Comprehensive Benefits</h3>
+                  <h3 className="text-xl font-semibold text-hospital-700 mb-2">
+                    Comprehensive Benefits
+                  </h3>
                   <p className="text-gray-600">
-                    Our benefits package includes health, dental, and vision insurance, paid time off, retirement plans,
-                    and more.
+                    Our benefits package includes health, dental, and vision insurance, paid time
+                    off, retirement plans, and more.
                   </p>
                 </motion.div>
               </div>
@@ -564,10 +634,13 @@ const Careers = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  <h3 className="text-xl font-semibold text-hospital-700 mb-2">Professional Development</h3>
+                  <h3 className="text-xl font-semibold text-hospital-700 mb-2">
+                    Professional Development
+                  </h3>
                   <p className="text-gray-600">
-                    We are committed to providing our employees with opportunities for professional growth and
-                    development through training programs, tuition reimbursement, and mentorship.
+                    We are committed to providing our employees with opportunities for professional
+                    growth and development through training programs, tuition reimbursement, and
+                    mentorship.
                   </p>
                 </motion.div>
               </div>
@@ -584,13 +657,14 @@ const Careers = () => {
               Application for {currentJobDetails?.title}
             </DialogTitle>
             <DialogDescription>
-              Please complete the application form below. All fields marked with <span className="text-red-500">*</span>{" "}
-              are required.
+              Please complete the application form below. All fields marked with{" "}
+              <span className="text-red-500">*</span> are required.
             </DialogDescription>
           </DialogHeader>
-
-          <JobApplicationForm jobId={currentJobDetails?.id || ""} onSubmit={handleApplicationSubmit} />
-
+          <JobApplicationForm
+            jobId={currentJobDetails?.id || ""}
+            onSubmit={handleApplicationSubmit}
+          />
           <DialogFooter className="mt-4">
             <Button variant="outline" onClick={() => setIsApplicationModalOpen(false)}>
               <X className="mr-2 h-4 w-4" /> Cancel
@@ -605,36 +679,23 @@ const Careers = () => {
           <DialogHeader>
             <div className="flex items-center justify-between">
               <div>
-                <DialogTitle className="text-2xl font-bold text-hospital-900">Application Confirmation</DialogTitle>
+                <DialogTitle className="text-2xl font-bold text-hospital-900">
+                  Application Confirmation
+                </DialogTitle>
                 <DialogDescription className="text-gray-600">
-                  Thank you, <span className="font-semibold">{applicationData?.fullName}</span>, for applying for the
-                  position of {currentJobDetails?.title}.
+                  Thank you,{" "}
+                  <span className="font-semibold text-blue-600">{applicationData?.fullName}</span>, for applying for
+                  the position of {currentJobDetails?.title}.
                 </DialogDescription>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm" onClick={handlePrint} className="hidden print:hidden">
-                  <Printer className="mr-2 h-4 w-4" /> Print
-                </Button>
-                {/* <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setIsConfirmationModalOpen(false)}
-                  className="print:hidden"
-                >
-                  <X className="mr-2 h-4 w-4" /> Close
-                </Button> */}
               </div>
             </div>
           </DialogHeader>
-
           <div className="space-y-6 py-4 print:py-2">
             {/* Header with Reference Number */}
             <div className="bg-hospital-50 p-4 rounded-lg flex justify-between items-center print:bg-transparent print:border-b print:border-gray-200 print:rounded-none">
               <div>
                 <p className="text-sm text-gray-500">Reference Number</p>
-                <p className="font-mono font-bold text-hospital-700">
-                  {`MED-${Math.floor(100000 + Math.random() * 900000)}`}
-                </p>
+                <p className="font-mono font-bold text-hospital-700">{refNumber}</p>
               </div>
               <div className="text-right">
                 <p className="text-sm text-gray-500">Submitted on</p>
@@ -645,6 +706,7 @@ const Careers = () => {
                     day: "numeric",
                     hour: "2-digit",
                     minute: "2-digit",
+                    timeZoneName: "short",
                   })}
                 </p>
               </div>
@@ -745,23 +807,37 @@ const Careers = () => {
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="h-4 w-4 mt-0.5 mr-2 flex-shrink-0 text-blue-600" />
-                  <span>Our HR team will contact only shortlisted candidates for interview dates</span>
+                  <span>
+                    Our HR team will contact only shortlisted candidates for interview dates
+                  </span>
                 </li>
-                {/* <li className="flex items-start">
+                <li className="flex items-start">
                   <CheckCircle className="h-4 w-4 mt-0.5 mr-2 flex-shrink-0 text-blue-600" />
-                  <span>You can check your application status in your email</span>
-                </li> */}
+                  <span>
+                    Use your reference number to track your application status{" "}
+                    <Button
+                      variant="link"
+                      size="sm"
+                      onClick={() => {
+                        setIsConfirmationModalOpen(false);
+                        setIsStatusCheckModalOpen(true);
+                      }}
+                    >
+                      here
+                    </Button>
+                  </span>
+                </li>
               </ul>
             </div>
 
             {/* Print Notice - only visible when printing */}
             <div className="hidden print:block border-t pt-4 mt-4">
               <p className="text-xs text-gray-500">
-                This document was generated on {new Date().toLocaleDateString()} and is valid without signature.
+                This document was generated on {new Date().toLocaleDateString()} and is valid without
+                signature.
               </p>
             </div>
           </div>
-
           {/* Footer - Hidden when printing */}
           <DialogFooter className="print:hidden">
             <div className="w-full flex justify-between items-center">
@@ -774,9 +850,98 @@ const Careers = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Application Status Check Modal */}
+      <Dialog open={isStatusCheckModalOpen} onOpenChange={setIsStatusCheckModalOpen}>
+        <DialogContent className="max-w-xl bg-white rounded-2xl shadow-xl border border-gray-200">
+          {/* Header */}
+          <DialogHeader className="flex items-center gap-3 border-b border-gray-200 pb-4">
+            <FileText className="h-8 w-8 text-hospital-600" />
+            <div>
+              <DialogTitle className="text-2xl font-bold text-hospital-800">
+                Check Application Status
+              </DialogTitle>
+              <DialogDescription className="text-sm text-gray-600">
+                Enter your reference number below to view the status of your application.
+              </DialogDescription>
+            </div>
+          </DialogHeader>
+          {/* Body */}
+          <div className="py-6 space-y-4">
+            {/* Reference Number Input */}
+            <div>
+              <label htmlFor="referenceNumber" className="block text-sm font-medium text-gray-700">
+                Reference Number
+              </label>
+              <div className="mt-1 relative rounded-md shadow-sm">
+                <Input
+                  id="referenceNumber"
+                  type="text"
+                  placeholder="MED-XXXXXX"
+                  value={refNumber}
+                  onChange={(e) => setRefNumber(e.target.value)}
+                  className="w-full h-12 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-hospital-500 focus:border-hospital-500"
+                />
+                {refNumber && !applicationStatus && (
+                  <p className="absolute inset-x-0 bottom-0 text-xs text-red-500 mt-1 ml-2">
+                    Invalid reference number. Please try again.
+                  </p>
+                )}
+              </div>
+            </div>
+            {/* Check Status Button */}
+            <Button
+              onClick={handleCheckStatus}
+              disabled={!refNumber}
+              className="w-full bg-hospital-600 hover:bg-hospital-700 text-white font-semibold h-12 rounded-lg transition-all"
+            >
+              Check Status
+            </Button>
+            {/* Status Result */}
+            {applicationStatus && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-2"
+              >
+                <div className="flex items-center gap-2">
+                  <CheckCircle
+                    className={`h-5 w-5 ${
+                      applicationStatus.status === "Shortlisted" ? "text-green-500" : "text-red-500"
+                    }`}
+                  />
+                  <p className="text-lg font-semibold text-gray-800">
+                    Status:{" "}
+                    <span
+                      className={`${
+                        applicationStatus.status === "Shortlisted" ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {applicationStatus.status}
+                    </span>
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Job Applied For: <span className="font-medium">{applicationStatus.jobTitle}</span>
+                </p>
+              </motion.div>
+            )}
+          </div>
+          {/* Footer */}
+          <DialogFooter className="border-t border-gray-200 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsStatusCheckModalOpen(false)}
+              className="w-full md:w-auto text-gray-700 hover:text-gray-900 border-gray-300 hover:border-gray-400"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Footer />
     </>
-  )
-}
-export default Careers
+  );
+};
 
+export default Careers;

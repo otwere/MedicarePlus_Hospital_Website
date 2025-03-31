@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Search, Filter, User, Phone, Mail, Calendar, X, Star } from "lucide-react";
 
 import Navbar from "@/components/Navbar";
@@ -329,7 +329,7 @@ const Doctors = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input 
                   type="text" 
-                  placeholder="Search doctors by name or specialty" 
+                  placeholder="Search Doctor by name | Specialty" 
                   className="pl-10"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
