@@ -876,7 +876,7 @@ const Careers = () => {
                   placeholder="MED-XXXXXX"
                   value={refNumber}
                   onChange={(e) => setRefNumber(e.target.value)}
-                  className="w-full h-12 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-hospital-500 focus:border-hospital-500"
+                  className="w-full h-12 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 focus:ring-hospital-500 focus:border-hospital-500"
                 />
                 {refNumber && !applicationStatus && (
                   <p className="absolute inset-x-0 bottom-0 text-xs text-red-500 mt-1 ml-2">
@@ -905,10 +905,10 @@ const Careers = () => {
               >
                 {/* Applicant Name */}
                 <div className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-gray-600" />
-                  <p className="text-lg font-medium text-gray-800">
+                  <User className="h-5 w-5 text-green-600" />
+                  <p className="text-[1rem] font-medium text-gray-700">
                     Applicant Name :{" "}
-                    <span className="font-medium">{applicationStatus.applicantName}</span>
+                    <span className="font-medium text-blue-600">{applicationStatus.applicantName}</span>
                   </p>
                 </div>
 
@@ -923,7 +923,7 @@ const Careers = () => {
                         : "text-red-500"
                     }`}
                   />
-                  <p className="text-lg font-medium text-gray-800">
+                  <p className="text-[1rem] font-medium text-gray-800">
                     Status :{" "}
                     <span
                       className={`${
@@ -965,7 +965,7 @@ const Careers = () => {
                   <ul className="text-sm text-gray-600 space-y-1 list-disc pl-5">
                     {applicationStatus.status === "Shortlisted" && (
                       <li>
-                        Our HR team will contact you  to schedule an interview date and time. Ensure your phone
+                        Our HR team will contact you  to schedule date and time for the interview . Ensure your phone
                         and email are accessible.
                       </li>
                     )}
@@ -992,9 +992,9 @@ const Careers = () => {
             <Button
               variant="outline"
               onClick={() => setIsStatusCheckModalOpen(false)}
-              className="w-full md:w-auto text-gray-700 hover:text-gray-900 border-gray-300 hover:border-gray-400"
+              className="w-full md:w-auto text-gray-700 hover:text-white border-gray-300 hover:border-gray-400 px-12"
             >
-              Close
+              Close 
             </Button>
           </DialogFooter>
         </DialogContent>

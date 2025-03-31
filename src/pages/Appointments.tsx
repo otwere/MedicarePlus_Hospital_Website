@@ -1663,9 +1663,9 @@ const Appointments = () => {
                 name="taxId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tax ID (Optional)</FormLabel>
+                    <FormLabel>KRA PIN*</FormLabel>
                     <FormControl>
-                      <Input placeholder="Tax ID / VAT Number" {...field} />
+                      <Input placeholder="Enter KRA PIN" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
