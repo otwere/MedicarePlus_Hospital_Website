@@ -45,24 +45,24 @@ const jobs = [
     department: "Emergency Medicine",
     location: "Main Hospital",
     type: "Full-time",
-    category: "Medical Staff",
+    category: "Medicine Staff",
     experience: "5+ years",
     postedDate: "2023-09-15",
     status: "Open" as const,
     description:
-      "Join our emergency medicine team to provide urgent care to patients with acute illnesses or injuries that require immediate medical attention.",
+      "Join our emergency Medicine team to provide urgent care to patients with acute illnesses or injuries that require immediate Medicine attention.",
     responsibilities: [
       "Assess and treat patients with acute illnesses or injuries",
       "Order and interpret diagnostic tests",
       "Develop treatment plans for patients",
       "Collaborate with specialists and other healthcare professionals",
-      "Maintain accurate medical records",
+      "Maintain accurate Medicine records",
     ],
     requirements: [
       "Doctor of Medicine (MD) or Doctor of Osteopathic Medicine (DO)",
       "Board certification in Emergency Medicine",
-      "Current state medical license",
-      "5+ years of experience in emergency medicine",
+      "Current state Medicine license",
+      "5+ years of experience in emergency Medicine",
       "BLS, ACLS, PALS, and ATLS certifications",
     ],
     benefits: [
@@ -85,10 +85,10 @@ const jobs = [
     status: "Open" as const,
     closingDate: "2023-10-30",
     description:
-      "We are seeking a compassionate and skilled Registered Nurse to join our nursing team. The Registered Nurse will provide direct patient care, administer medications, and collaborate with physicians and other healthcare professionals.",
+      "We are seeking a compassionate and skilled Registered Nurse to join our nursing team. The Registered Nurse will provide direct patient care, administer Medication, and collaborate with physicians and other healthcare professionals.",
     responsibilities: [
       "Provide direct patient care",
-      "Administer medications",
+      "Administer Medication",
       "Monitor patient vital signs",
       "Educate patients and families",
       "Collaborate with physicians and other healthcare professionals",
@@ -110,7 +110,7 @@ const jobs = [
   },
   {
     id: "job-003",
-    title: "Medical Assistant",
+    title: "Medicine Assistant",
     department: "Clinical Support",
     location: "Outpatient Clinic",
     type: "Part-time",
@@ -120,18 +120,18 @@ const jobs = [
     status: "Closed" as const,
     closingDate: "2023-10-15",
     description:
-      "We are seeking a detail-oriented and organized Medical Assistant to join our clinical support team. The Medical Assistant will assist physicians and nurses with patient care, perform administrative tasks, and maintain a clean and organized work environment.",
+      "We are seeking a detail-oriented and organized Medicine Assistant to join our clinical support team. The Medicine Assistant will assist physicians and nurses with patient care, perform administrative tasks, and maintain a clean and organized work environment.",
     responsibilities: [
       "Assist physicians and nurses with patient care",
       "Perform administrative tasks",
       "Maintain a clean and organized work environment",
       "Prepare patients for examinations and procedures",
-      "Collect and record patient medical histories",
+      "Collect and record patient Medicine histories",
     ],
     requirements: [
       "High school diploma or equivalent",
-      "Completion of a medical assistant program",
-      "1+ year of experience in a medical office setting",
+      "Completion of a Medicine assistant program",
+      "1+ year of experience in a Medicine office setting",
       "CPR certification",
       "Excellent communication and interpersonal skills",
     ],
@@ -188,13 +188,13 @@ const jobs = [
     postedDate: "2023-10-05",
     status: "Open" as const,
     description:
-      "We are seeking a licensed Pharmacist to join our pharmacy team. The Pharmacist will dispense medications, provide drug information, and ensure patient safety.",
+      "We are seeking a licensed Pharmacist to join our pharmacy team. The Pharmacist will dispense Medication, provide drug information, and ensure patient safety.",
     responsibilities: [
-      "Dispense medications",
+      "Dispense Medication",
       "Provide drug information",
       "Ensure patient safety",
       "Review prescriptions for accuracy and appropriateness",
-      "Counsel patients on medication use",
+      "Counsel patients on Medication use",
     ],
     requirements: [
       "Bachelor's or Doctor of Pharmacy degree",
@@ -372,7 +372,7 @@ const Careers = () => {
     console.log("Processed application data:", processedData);
 
     // Generate a unique reference number
-    const newRefNumber = `MED-${Math.floor(100000 + Math.random() * 900000)}`;
+    const newRefNumber = `MCP-${Math.floor(100000 + Math.random() * 900000)}`;
     setRefNumber(newRefNumber); // Store reference number in state
     setApplicationData(processedData);
 
@@ -808,22 +808,7 @@ const Careers = () => {
                     Our HR team will contact only shortlisted candidates for interview dates
                   </span>
                 </li>
-                <li className="flex items-start">
-                  <CheckCircle className="h-4 w-4 mt-0.5 mr-2 flex-shrink-0 text-blue-600" />
-                  <span>
-                    Use your reference number to track your application status{" "}
-                    <Button
-                      variant="link"
-                      size="sm"
-                      onClick={() => {
-                        setIsConfirmationModalOpen(false);
-                        setIsStatusCheckModalOpen(true);
-                      }}
-                    >
-                      here
-                    </Button>
-                  </span>
-                </li>
+              
               </ul>
             </div>
             {/* Print Notice - only visible when printing */}
@@ -873,7 +858,7 @@ const Careers = () => {
                 <Input
                   id="referenceNumber"
                   type="text"
-                  placeholder="MED-XXXXXX"
+                  placeholder="MCP-XXXXXX"
                   value={refNumber}
                   onChange={(e) => setRefNumber(e.target.value)}
                   className="w-full h-12 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 focus:ring-hospital-500 focus:border-hospital-500"
@@ -924,7 +909,7 @@ const Careers = () => {
                     }`}
                   />
                   <p className="text-[1rem] font-medium text-gray-800">
-                    Status :{" "}
+                   Job Application Status :{" "}
                     <span
                       className={`${
                         applicationStatus.status === "Shortlisted"
@@ -958,7 +943,6 @@ const Careers = () => {
                     </span>
                   </p>
                 </div>
-
                 {/* Additional Information */}
                 <div className="border-t border-gray-200 pt-3">
                   <h4 className="text-sm font-medium text-gray-700 mb-2">Next Steps</h4>
