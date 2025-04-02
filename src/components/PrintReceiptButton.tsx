@@ -1,8 +1,7 @@
-"use client"
-
-import type React from "react"
+"use client";
+import type React from "react";
 import { Button } from "@/components/ui/button"
-import { PrinterIcon } from "lucide-react"
+import { PrinterIcon } from "lucide-react";;
 
 interface PrintReceiptButtonProps {
   paymentData: {
@@ -580,7 +579,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                     </div>
                     <div class="receipt-row">
                       <div class="receipt-label">Payment Method :</div>
-                      <div class="receipt-value">${paymentData.paymentMethod === "cash" ? "Pay at Hospital" : paymentData.paymentMethod || "N/A"}</div>
+                      <div class="receipt-value">${paymentData.paymentMethod === "insurance" ? "Pay via Ins" : paymentData.paymentMethod || "N/A"}</div>
                     </div>
                     <div class="receipt-row">
                       <div class="receipt-label">Payment Date :</div>

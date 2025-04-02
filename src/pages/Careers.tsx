@@ -890,7 +890,7 @@ const Careers = () => {
               >
                 {/* Applicant Name */}
                 <div className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-green-600" />
+                  <User className="h-5 w-5 text-blue-600" />
                   <p className="text-[1rem] font-medium text-gray-700">
                     Applicant Name :{" "}
                     <span className="font-medium text-blue-600">{applicationStatus.applicantName}</span>
