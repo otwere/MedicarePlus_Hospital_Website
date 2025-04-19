@@ -226,7 +226,7 @@ const Index = () => {
             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-hospital-100 text-hospital-600">
               <ShieldCheck className="h-4 w-4" />
             </div>
-            <span className="font-medium text-gray-700">JCI Accredited</span>
+            <span className="font-medium text-gray-700">SHA(SHIF) Accredited</span>
           </div>
           <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg">
             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-hospital-100 text-hospital-600">

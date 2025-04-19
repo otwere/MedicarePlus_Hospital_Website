@@ -1,128 +1,138 @@
 "use client";
 import type React from "react";
-import { Button } from "@/components/ui/button"
-import { PrinterIcon } from "lucide-react";;
+import { Button } from "@/components/ui/button";
+import { PrinterIcon } from "lucide-react";
 
 interface PrintReceiptButtonProps {
   paymentData: {
-    patientName?: string
-    serviceType?: string
-    amount?: number
-    paymentMethod?: string
-    paymentDate?: string
-    transactionId?: string
-    invoiceNumber?: string
-    doctorName?: string
-    appointmentDate?: string
-    appointmentTime?: string
-    email?: string
-    phone?: string
-    address?: string
-    insuranceProvider?: string
-    insurancePolicyNumber?: string
-    medicalRecordNumber?: string
-  }
+    patientName?: string;
+    serviceType?: string;
+    amount?: number;
+    paymentMethod?: string;
+    paymentDate?: string;
+    transactionId?: string;
+    invoiceNumber?: string;
+    doctorName?: string;
+    appointmentDate?: string;
+    appointmentTime?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    insuranceProvider?: string;
+    insurancePolicyNumber?: string;
+    medicalRecordNumber?: string;
+  };
 }
 
 const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) => {
   const formatCurrency = (value: number | undefined): string => {
-    if (value === undefined) return "0.00"
+    if (value === undefined) return "0.00";
     return value.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    })
-  }
+    });
+  };
 
   const maskPolicyNumber = (policyNumber: string | undefined): string => {
-    if (!policyNumber || policyNumber.length < 5) return policyNumber || ""
+    if (!policyNumber || policyNumber.length < 5) return policyNumber || "";
 
-    const length = policyNumber.length
-    const startChars = Math.floor((length - 3) / 2)
-    const endChars = length - startChars - 3
+    const length = policyNumber.length;
+    const startChars = Math.floor((length - 3) / 2);
+    const endChars = length - startChars - 3;
 
-    return policyNumber.substring(0, startChars) + "***" + policyNumber.substring(startChars + 3)
-  }
+    return policyNumber.substring(0, startChars) + "***" + policyNumber.substring(startChars + 3);
+  };
 
   const maskEmail = (email: string | undefined): string => {
-    if (!email || !email.includes("@")) return email || ""
+    if (!email || !email.includes("@")) return email || "";
 
-    const [username, domain] = email.split("@")
+    const [username, domain] = email.split("@");
 
     if (username.length <= 3) {
-      return `${username}@${domain}`
+      return `${username}@${domain}`;
     }
 
-    const visibleChars = Math.min(3, Math.floor(username.length / 3))
-    const maskedLength = username.length - visibleChars * 2
+    const visibleChars = Math.min(3, Math.floor(username.length / 3));
+    const maskedLength = username.length - visibleChars * 2;
 
-    const firstPart = username.substring(0, visibleChars)
-    const lastPart = username.substring(username.length - visibleChars)
-    const maskedPart = "*".repeat(Math.max(3, maskedLength))
+    const firstPart = username.substring(0, visibleChars);
+    const lastPart = username.substring(username.length - visibleChars);
+    const maskedPart = "*".repeat(Math.max(3, maskedLength));
 
-    return `${firstPart}${maskedPart}${lastPart}@${domain}`
-  }
+    return `${firstPart}${maskedPart}${lastPart}@${domain}`;
+  };
 
   const maskPhoneNumber = (phone: string | undefined): string => {
-    if (!phone || phone.length < 6) return phone || ""
+    if (!phone || phone.length < 6) return phone || "";
 
     // Remove any non-digit characters for consistent formatting
-    const digitsOnly = phone.replace(/\D/g, "")
+    const digitsOnly = phone.replace(/\D/g, "");
 
-    if (digitsOnly.length < 6) return phone
+    if (digitsOnly.length < 6) return phone;
 
-    const firstPart = phone.substring(0, Math.min(4, Math.floor(phone.length / 3)))
-    const lastPart = phone.substring(phone.length - 4)
+    const firstPart = phone.substring(0, Math.min(4, Math.floor(phone.length / 3)));
+    const lastPart = phone.substring(phone.length - 4);
 
     // Find the middle part to replace with asterisks
-    const middleStartIndex = firstPart.length
-    const middleEndIndex = phone.length - lastPart.length
-    const middleLength = middleEndIndex - middleStartIndex
+    const middleStartIndex = firstPart.length;
+    const middleEndIndex = phone.length - lastPart.length;
+    const middleLength = middleEndIndex - middleStartIndex;
 
     // Create the masked middle part with the same length as the original
-    const maskedMiddle = "*".repeat(Math.min(3, middleLength))
+    const maskedMiddle = "*".repeat(Math.min(3, middleLength));
 
-    return `${firstPart}${maskedMiddle}${lastPart}`
-  }
+    return `${firstPart}${maskedMiddle}${lastPart}`;
+  };
 
   const getOrGenerateInvoiceNumber = (): string => {
     // Always generate a unique random invoice number if not provided
     const newInvoiceNumber =
       paymentData.invoiceNumber ||
-      `INV/${new Date().getFullYear()}/${Math.random().toString(36).substring(2, 8).toUpperCase()}`
+      `INV/${new Date().getFullYear()}/${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
-    localStorage.setItem("invoiceNumber", newInvoiceNumber)
-    return newInvoiceNumber
-  }
+    localStorage.setItem("invoiceNumber", newInvoiceNumber);
+    return newInvoiceNumber;
+  };
 
   const getOrGenerateControlUnitNo = (): string => {
-    const storedControlUnitNo = localStorage.getItem("controlUnitNo")
+    const storedControlUnitNo = localStorage.getItem("controlUnitNo");
     if (storedControlUnitNo && paymentData.transactionId === undefined) {
-      return storedControlUnitNo
+      return storedControlUnitNo;
     }
 
-    const newControlUnitNo = `CU-${Date.now().toString().substring(5)}`
-    localStorage.setItem("controlUnitNo", newControlUnitNo)
-    return newControlUnitNo
-  }
+    // Generate 15 random digits
+    const randomDigits = Array.from({length: 15}, () => 
+      Math.floor(Math.random() * 10).toString()
+    ).join('');
+    
+    const newControlUnitNo = `KRAMW${randomDigits}`;
+    localStorage.setItem("controlUnitNo", newControlUnitNo);
+    return newControlUnitNo;
+  };
 
   const getOrGenerateReceiptId = (): string => {
-    const storedReceiptId = localStorage.getItem("receiptId")
+    const storedReceiptId = localStorage.getItem("receiptId");
     if (storedReceiptId && paymentData.transactionId === undefined) {
-      return storedReceiptId
+      return storedReceiptId;
     }
 
-    const newReceiptId = `REC-${Date.now().toString().substring(7)}`
-    localStorage.setItem("receiptId", newReceiptId)
-    return newReceiptId
-  }
+    // Generate 19 random digits
+    const randomDigits = Array.from({length: 19}, () => 
+      Math.floor(Math.random() * 10).toString()
+    ).join('');
+    
+    const newReceiptId = `${randomDigits}`;
+    localStorage.setItem("receiptId", newReceiptId);
+    return newReceiptId;
+  };
 
   const handlePrintReceipt = () => {
     // Create a new window for the receipt
-    const receiptWindow = window.open("", "_blank", "width=800,height=600")
+    const receiptWindow = window.open("", "_blank", "width=800,height=600");
 
     if (!receiptWindow) {
-      alert("Please allow pop-ups to print your receipt")
-      return
+      alert("Please allow pop-ups to print your receipt");
+      return;
     }
 
     // Format the payment date
@@ -136,34 +146,34 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
           year: "numeric",
           month: "long",
           day: "numeric",
-        })
+        });
 
     // Generate random transaction ID if not provided
     const transactionId =
       paymentData.transactionId ||
-      `TXN-${Math.floor(Math.random().toString(36).substring(2, 8).toUpperCase())}`
+      `TXN-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
 
     // Calculate VAT (16%)
-    const vatRate = 0.16
+    const vatRate = 0.16;
     // Calculate pre-VAT amount (amount paid ÷ 1.16)
-    const preVatAmount = paymentData.amount ? paymentData.amount / (1 + vatRate) : 0
-    const vatAmount = paymentData.amount ? paymentData.amount - preVatAmount : 0
-    const totalWithVat = paymentData.amount || 0
+    const preVatAmount = paymentData.amount ? paymentData.amount / (1 + vatRate) : 0;
+    const vatAmount = paymentData.amount ? paymentData.amount - preVatAmount : 0;
+    const totalWithVat = paymentData.amount || 0;
 
     // Use the persistent invoice number
-    const invoiceNumber = getOrGenerateInvoiceNumber()
+    const invoiceNumber = getOrGenerateInvoiceNumber();
 
     // Use the persistent Control Unit No
-    const controlUnitNo = getOrGenerateControlUnitNo()
+    const controlUnitNo = getOrGenerateControlUnitNo();
 
     // Use the persistent Receipt ID
-    const receiptId = getOrGenerateReceiptId()
+    const receiptId = getOrGenerateReceiptId();
 
     // Determine payment status based on payment method
-    const isPaid = paymentData.paymentMethod !== "cash"
-    const paymentStatus = isPaid ? "Paid" : "Unpaid"
-    const statusColor = isPaid ? "#0d904f" : "#e05252"
-    const statusBgColor = isPaid ? "#e6f7ed" : "#fde8e8"
+    const isPaid = paymentData.paymentMethod !== "cash";
+    const paymentStatus = isPaid ? "Paid" : "Unpaid";
+    const statusColor = isPaid ? "#0d904f" : "#e05252";
+    const statusBgColor = isPaid ? "#e6f7ed" : "#fde8e8";
 
     // HTML content for the receipt with A4 dimensions
     const receiptContent = `
@@ -326,6 +336,11 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
             font-weight: 500;
             font-size: 11px;
           }
+          .cu-info{
+            padding-bottom: 0px;
+            font-semibold: 600;
+            }
+            
           .receipt-footer {
             padding: 8px;
             background-color: #f9f9f9;
@@ -518,7 +533,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                       paymentData.doctorName
                         ? `
                     <div class="receipt-row">
-                      <div class="receipt-label">Doctor :</div>
+                      <div class="receipt-label">Specialist | Doctor :</div>
                       <div class="receipt-value">${paymentData.doctorName}</div>
                     </div>
                     `
@@ -579,7 +594,7 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
                     </div>
                     <div class="receipt-row">
                       <div class="receipt-label">Payment Method :</div>
-                      <div class="receipt-value">${paymentData.paymentMethod === "insurance" ? "Pay via Ins" : paymentData.paymentMethod || "N/A"}</div>
+                      <div class="receipt-value">${paymentData.paymentMethod === "insurance" ? "Pay via Insurance" : paymentData.paymentMethod || "N/A"}</div>
                     </div>
                     <div class="receipt-row">
                       <div class="receipt-label">Payment Date :</div>
@@ -629,9 +644,10 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
               </div>
               
               <div class="digital-signature">
-                <p>This is an electronically generated receipt and does not require a physical signature.</p>
-                <p>Control Unit No : ${controlUnitNo}</p>
-                <p>eTMIS KRA Invoice Receipt ID : ${receiptId}</p>
+                <p>This is an electronically generated receipt and is eTIMS KRA integrated does not require a physical signature.</p>
+                <p class="cu-info">Control Unit Information :</p>
+                <p>CU Serial No : ${controlUnitNo}</p>
+                <p>CU Invoice Number : ${receiptId}</p>
                 <div class="qr-code" style="margin-top: 15px;">
                   <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MEDICAREPLUS-RECEIPT-${transactionId}" alt="Receipt QR Code">
                   <div class="qr-code-text">Scan to verify receipt</div>
@@ -664,20 +680,19 @@ const PrintReceiptButton: React.FC<PrintReceiptButtonProps> = ({ paymentData }) 
         </script>
       </body>
       </html>
-    `
+    `;
 
     // Write the content to the new window
-    receiptWindow.document.write(receiptContent)
-    receiptWindow.document.close()
-  }
+    receiptWindow.document.write(receiptContent);
+    receiptWindow.document.close();
+  };
 
   return (
     <Button onClick={handlePrintReceipt} className="bg-hospital-600 hover:bg-hospital-700 text-white">
       <PrinterIcon className="mr-2 h-4 w-4" />
       Print Receipt
     </Button>
-  )
-}
+  );
+};
 
-export default PrintReceiptButton
-
+export default PrintReceiptButton;
